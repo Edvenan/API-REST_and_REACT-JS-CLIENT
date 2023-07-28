@@ -1,2 +1,3 @@
 # API-REST
-Dice Game application with different user roles (player and administrator).
+Dice Game applicationwith different user roles (player and administrator).
+Implemented API REST to serve any frontend.
