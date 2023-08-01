@@ -44,4 +44,12 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    /**
+     * add the One-To-One relationship between User and Role Model.
+     */
+    public function role()
+    {
+        return $this->hasOne(Role::class);
+    }
 }

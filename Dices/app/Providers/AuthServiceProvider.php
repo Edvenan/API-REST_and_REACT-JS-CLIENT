@@ -29,6 +29,15 @@ class AuthServiceProvider extends ServiceProvider
         Passport::refreshTokensExpireIn(now()->addDays(30));
         Passport::personalAccessTokensExpireIn(now()->addMonths(6));
 
+        // Scope definitions
+        Passport::tokensCan([
+            'admin' => 'View/Edit/Delete Players - View/Edit/Delete Games',
+            'player' => 'Create/View/Delete own games - Edit own User name'
+        ]);
+
+        Passport::setDefaultScope([
+            'player'
+        ]);
         
     }
 }
