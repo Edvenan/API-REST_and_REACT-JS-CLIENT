@@ -17,16 +17,20 @@ use App\Http\Controllers\api\v1\UserController;
 
 // Routes accessible by any user
 Route::controller(UserController::class)->group(function () {
-    Route::post('/login', 'login')->name('login');             // User Login route
-    Route::post('/register', 'register')->name('register');    // User Register route
-    Route::get('/index', 'index')->name('index');              // Dummy route
+    Route::post('/login', 'login')->name('login');
+    Route::post('/players', 'register')->name('register');
 });
 
-
+// Routes accessible by authorized users with assigned roles
 Route::middleware('auth:api', 'role')->group( function () {
     
-    // Logout
-    Route::middleware(['scope:admin,player'])->post('/logout', [UserController::class, 'logout'])->name('logout');
+    
+    Route::middleware(['scope:admin,player'])->group( function () {
+    
+        Route::post('/logout', [UserController::class, 'logout'])->name('logout');  // Logout
+        Route::put('/players/{id}', [UserController::class, 'edit'])->name('edit');  // Edit User name
+
+    });
 
     // Route::resource('games', GameController::class);
 });

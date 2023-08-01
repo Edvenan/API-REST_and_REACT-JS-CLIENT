@@ -118,10 +118,43 @@ class UserController extends BaseController
     }
 
     /**
-     * Dummy function to test its access with or w/o auth/api middleware
+     * Edit User name function
      */
-    public function index()
+    public function edit($id, Request $request)
     {
-        return response(['message' => "Hola!"]);
+        // Get current user's role
+        $current_user_role = Auth::user()->role()->first()->role;
+
+        // Do not allow to Edit another user's name if user's role is 'player'
+        if ( ($current_user_role == 'player') && (Auth::user()->id != $id) ){
+            return $this->sendError("Not authorized to modify another user's name.", ['User id : '.Auth::user()->id, 'Target User id : '.$id], 401); 
+        }
+
+        $user = User::find($id);
+
+        // user input validation
+        $validator = Validator::make($request->all(), [
+            'name' => 'nullable|string|max:255|unique:users'
+        ]);
+
+        if($validator->fails()){
+            // handle if validation fails because new name = crrent name, 
+            if( $request->name == $user->name){
+                return $this->sendError('New user name matches current user name. User name has not been modified.', $user->only(['id', 'name', 'email']), 400);
+            }
+            return $this->sendError('Validation Error.', $validator->errors(), 400);       
+        }
+
+        // If no name is given, we set it as 'anonymous'
+        $request->name = $request->name == ''? 'Anonymous' : $request->name; 
+
+        if(!$user) {
+            return $this->sendError("Can't edit user name. User not found.", "User id = ".$id, 404);       
+        }
+
+        $user->name = $request->name;
+        $user->update();
+
+        return $this->sendResponse('User name modified successfully.', $user->only(['id', 'name', 'email']), 201);
     }
 }
