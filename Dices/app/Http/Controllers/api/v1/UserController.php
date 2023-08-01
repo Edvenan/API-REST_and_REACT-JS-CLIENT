@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api\v1;
 
 use App\Http\Controllers\api\v1\BaseController as BaseController;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -28,7 +29,7 @@ class UserController extends BaseController
      */
     public function register(Request $request)
     {
-        
+        // user input validation
         $validator = Validator::make($request->all(), [
             'name' => 'string|max:255|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
@@ -39,13 +40,21 @@ class UserController extends BaseController
         if($validator->fails()){
             return $this->sendError('Validation Error.', $validator->errors(), 400);       
         }
-     
+
+        // If no name is given, we set it as 'anonymous'
         $request->name = $request->name == ''? 'Anonymous' : $request->name; 
 
+        // insert user in users table
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+        ]);
+
+        // insert role 'players' as default in roles table 
+        Role::create([
+            'user_id' => $user->id,
+            'role' => 'player'
         ]);
    
         return $this->sendResponse('User register successfully.', $user->only(['name','email']), 201);
@@ -60,7 +69,7 @@ class UserController extends BaseController
      */
     public function login(Request $request)
     {
-
+        // user input validation
         $validator = Validator::make($request->all(), [
             'email' => 'required|string|email',
             'password' => 'required|string',
@@ -70,26 +79,21 @@ class UserController extends BaseController
             return $this->sendError('Validation Error.', $validator->errors());       
         }
 
-
-        /**
-         * Another way: If the validation fails (e.g., the email is missing or not in a valid format), Laravel will automatically 
-         * redirect back to the previous page with the validation errors, making it easy to display error messages to the user.
-         */
-        /* $credentials = $request->validate([
-            'email' => 'required|string|email',
-            'password' => 'required|string',
-        ]);
-
-         */
-
         $credentials = $request->only(['email', 'password']);
         
         if (auth()->attempt($credentials)) {
             $user = Auth::user();
+            
+            // get user's role and set its scope
+            $userRole = $user->role()->first();
+            
+            if ($userRole) {
+                $this->scope = $userRole->role;
+            }
 
-            // create OAuth Access Token
+            // create OAuth Access Token, adding scope to it
             $data['name'] = $user->name;
-            $data['token'] = $user->createToken($user->email."'s token")->accessToken;
+            $data['token'] = $user->createToken($user->email."'s token", [$this->scope])->accessToken;
 
             return $this->sendResponse('User logged in successfully.', $data, 201);
         }
@@ -104,10 +108,12 @@ class UserController extends BaseController
      */
     public function logout()
     {
+        // delete first entry in Roles table
+        //Role::where('user_id', Auth::user()->id)->delete();
+        
+        // delete entry (Token) in Oauth Access Tokens table
         Auth::user()->tokens()->delete();
-        /* return response()->json([
-            'message' => 'Successfully logged out',
-        ]); */
+        
         return $this->sendResponse('User logged out successfully.', Auth::user()->only(['name', 'email']), 201);
     }
 

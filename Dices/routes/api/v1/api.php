@@ -15,15 +15,20 @@ use App\Http\Controllers\api\v1\UserController;
 |
 */
 
+// Routes accessible by any user
 Route::controller(UserController::class)->group(function () {
     Route::post('/login', 'login')->name('login');             // User Login route
     Route::post('/register', 'register')->name('register');    // User Register route
-    Route::post('/logout', 'logout')->name('logout');          // User Logout route
     Route::get('/index', 'index')->name('index');              // Dummy route
 });
 
-Route::middleware('auth:api')->group( function () {
-    Route::resource('games', GameController::class);
+
+Route::middleware('auth:api', 'role')->group( function () {
+    
+    // Logout
+    Route::middleware(['scope:admin,player'])->post('/logout', [UserController::class, 'logout'])->name('logout');
+
+    // Route::resource('games', GameController::class);
 });
 
 
