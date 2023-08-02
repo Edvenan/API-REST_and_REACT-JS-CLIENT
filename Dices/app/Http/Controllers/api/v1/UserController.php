@@ -54,7 +54,6 @@ class UserController extends BaseController
     
     }
 
-    
     /**
      * User Login
      *
@@ -119,13 +118,13 @@ class UserController extends BaseController
     {
         // Validate if Auth user can act on the target id data
         if ( ! $this->userValidation($id, $request) ){
-            return $this->sendError("Not authorized to modify another user's name.", ['Auth User id : '.Auth::user()->id, 'Target User id : '.$id], 401); 
+            return $this->sendError("Forbidden. Not authorized to modify another user's name.", ['Auth_User_Id'.Auth::user()->id, 'Target_User_Id : '.$id], 403); 
         }
 
         $user = User::find($id);
 
         if(!$user) {
-            return $this->sendError("Can't edit user name. User not found.", "User id = ".$id, 404);       
+            return $this->sendError("Not found. Can't edit user name.", ["Target_User_Id" => $id], 404);       
         }
 
         // user input validation
@@ -136,9 +135,9 @@ class UserController extends BaseController
         if($validator->fails()){
             // handle if validation fails because new name = crrent name, 
             if( $request->name == $user->name){
-                return $this->sendError('New user name matches current user name. User name has not been modified.', $user->only(['id', 'name', 'email']), 400);
+                return $this->sendError('Bad request. New user name matches current user name. User name has not been modified.', $user, 400);
             }
-            return $this->sendError('Validation Error.', $validator->errors(), 400);       
+            return $this->sendError('Bad request. Validation Error.', $validator->errors(), 400);       
         }
 
         // If no name is given, we set it as 'anonymous'
@@ -147,7 +146,7 @@ class UserController extends BaseController
         $user->name = $request->name;
         $user->update();
 
-        return $this->sendResponse('User name modified successfully.', $user->only(['id', 'name', 'email']), 201);
+        return $this->sendResponse('User name modified successfully.', $user, 201);
     }
 
     /**
