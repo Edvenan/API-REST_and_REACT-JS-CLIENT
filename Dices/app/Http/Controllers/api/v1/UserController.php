@@ -15,15 +15,8 @@ use Illuminate\Support\Facades\Validator;
 class UserController extends BaseController
 {
 
-    // We define in constructor which methods can be called by an unauthorized user.
-    // In order to call any other method, the user must use a valid token
-    public function __construct()
-    {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
-    }
-
     /**
-     * Register api
+     * Create Player
      *
      * @return \Illuminate\Http\Response
      */
@@ -38,7 +31,7 @@ class UserController extends BaseController
         ]);
      
         if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors(), 400);       
+            return $this->sendError('Bad request. Validation Error.', $validator->errors(), 400);       
         }
 
         // If no name is given, we set it as 'anonymous'
@@ -57,13 +50,13 @@ class UserController extends BaseController
             'role' => 'player'
         ]);
    
-        return $this->sendResponse('User register successfully.', $user->only(['name','email']), 201);
+        return $this->sendResponse('User register successfully.', $user, 201);
     
     }
 
     
     /**
-     * Login api
+     * User Login
      *
      * @return \Illuminate\Http\Response
      */
@@ -87,22 +80,24 @@ class UserController extends BaseController
             // get user's role and set its scope
             $userRole = $user->role()->first();
             
-            if ($userRole) {
-                $this->scope = $userRole->role;
+            if (!$userRole) {
+                return $this->sendError('Not found. User with no role assigned.', 404); 
             }
+            
+            $this->scope = $userRole->role;
 
             // create OAuth Access Token, adding scope to it
-            $data['name'] = $user->name;
+            $data['user'] = $user;
             $data['token'] = $user->createToken($user->email."'s token", [$this->scope])->accessToken;
 
             return $this->sendResponse('User logged in successfully.', $data, 201);
         }
         
-        return $this->sendError('Invalid credentials.', 401);  
+        return $this->sendError('Unauthorized. Invalid credentials.', 401);  
     }
 
     /**
-     * Logout api
+     * User Logout
      *
      * @return \Illuminate\Http\Response
      */
@@ -114,7 +109,7 @@ class UserController extends BaseController
         // delete entry (Token) in Oauth Access Tokens table
         Auth::user()->tokens()->delete();
         
-        return $this->sendResponse('User logged out successfully.', Auth::user()->only(['name', 'email']), 201);
+        return $this->sendResponse('User logged out successfully.', Auth::user(), 201);
     }
 
     /**
