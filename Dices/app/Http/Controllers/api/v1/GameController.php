@@ -54,7 +54,7 @@ class GameController extends BaseController
                         'result' => $result,
         ]);
 
-        return $this->sendResponse("New game created successfully.", ['Game' => $new_game], 201);
+        return $this->sendResponse("New game created successfully.", $new_game, 201);
 
     }
 
@@ -93,9 +93,25 @@ class GameController extends BaseController
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Game $game)
+    public function destroy($id)
     {
-        //
+        
+        // Validate if Auth user can act on the target id data
+        if ( ! $this->userValidation($id) ){
+            return $this->sendError("Not authorized to delete another user's games.", ['Auth User id : '.Auth::user()->id, 'Target User id : '.$id], 401); 
+        }
+
+        // Validate if target user exists
+        $user = User::find($id);
+
+        if(!$user) {
+            return $this->sendError("Can't delete games for this user. User not found.", "Target User id = ".$id, 404);       
+        }
+        
+        
+        Game::destroy($user->games());
+
+        return $this->sendResponse("Games deleted successfully.", "" , 200);
     }
 
     /**
