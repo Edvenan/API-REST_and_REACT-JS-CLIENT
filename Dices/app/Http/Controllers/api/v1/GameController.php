@@ -1,11 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\api\v1;
 
+use App\Http\Controllers\api\v1\BaseController;
 use App\Models\Game;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-class GameController extends Controller
+class GameController extends BaseController
 {
     /**
      * Display a listing of the resource.
@@ -16,11 +19,43 @@ class GameController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Create new Game
      */
-    public function create()
+    public function create($id)
     {
-        //
+        // Validate if Auth user can act on the target id data
+        if ( ! $this->userValidation($id) ){
+            return $this->sendError("Not authorized to create another user's games.", ['Auth User id : '.Auth::user()->id, 'Target User id : '.$id], 401); 
+        }
+
+        // Validate if target user exists
+        $user = User::find($id);
+
+        if(!$user) {
+            return $this->sendError("Can't create a game for this user. User not found.", "Target User id = ".$id, 404);       
+        }
+
+        // roll the dices
+        $dice_1 = random_int(1,6);
+        $dice_2 = random_int(1,6);
+        
+        // obtain result (wins = 1, loses = 0)
+        $sum = $dice_1 + $dice_2;
+
+        if ($sum == 7){
+            $result = 1;    // wins
+        } else {
+            $result = 0;    // loses
+        }
+
+        $new_game = Game::create(['user_id' => $id,
+                        'dice_1' => $dice_1,
+                        'dice_2' => $dice_2,
+                        'result' => $result,
+        ]);
+
+        return $this->sendResponse("New game created successfully.", ['Game' => $new_game], 201);
+
     }
 
     /**
@@ -61,5 +96,21 @@ class GameController extends Controller
     public function destroy(Game $game)
     {
         //
+    }
+
+    /**
+     * Helper function: User validation
+     * Check if Auth user can act on target user's data
+     */
+    public function userValidation($id)
+    {
+        // Get Auth user's role
+        $auth_user_role = Auth::user()->role()->first()->role;
+
+        // Do not allow to access another user's data if Auth user's role is 'player'
+        if ( ($auth_user_role == 'player') && (Auth::user()->id != $id) ) {
+            return false;
+        }
+        return true;
     }
 }

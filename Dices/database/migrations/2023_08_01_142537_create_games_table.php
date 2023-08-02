@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->integer('dice_1')->unsigned();
             $table->integer('dice_2')->unsigned();
-            $table->tinyInteger('result')->default(0);
+            $table->tinyInteger('result')->unsigned();
             $table->timestamps();
         });
     }

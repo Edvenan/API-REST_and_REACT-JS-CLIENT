@@ -180,7 +180,7 @@ class UserController extends BaseController
      * Helper function: User validation
      * Check if Auth user can act on target user's data
      */
-    public function userValidation($id, Request $request)
+    public function userValidation($id)
     {
         // Get Auth user's role
         $auth_user_role = Auth::user()->role()->first()->role;
