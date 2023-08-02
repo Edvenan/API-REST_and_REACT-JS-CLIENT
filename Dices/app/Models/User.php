@@ -52,4 +52,24 @@ class User extends Authenticatable
     {
         return $this->hasOne(Role::class);
     }
+
+    /**
+     * Method to list all the player's games
+     * ordered by date
+     */
+    // 
+    public function games(){
+        return Game::where('user_id', $this->id)->orderBy('created_at', 'asc')->get();
+    }
+
+    /**
+     * Method to get the player's wins rate
+     */
+    // 
+    public function winsRate(){
+        if ($this->games()->count()) {
+        return floatval($this->gameS()->where('result', 1)->count() / $this->games()->count());
+        }
+        return 0;
+    }
 }
