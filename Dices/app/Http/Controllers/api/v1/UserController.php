@@ -223,6 +223,25 @@ class UserController extends BaseController
         return $this->sendResponse("Winner retrieved successfully.", $winner, 200);
     }
 
+    /**
+     * Delete User
+     */
+    public function destroy($id)
+    {
+        $user = User::find($id);
+
+        if(!$user) {
+            return $this->sendError("Not found. User could not be deleted.", ["User_Id" => $id], 404);       
+        }
+
+        if (Auth::user()->id == $id){
+            return $this->sendError("Forbidden. User cannot delete itself.", ["User_Id" => $id], 403);    
+        }
+        
+        $user->delete();
+        
+        return $this->sendResponse("User deleted successfully.", '', 200);
+    }
 
     /**
      * Helper function: User validation
