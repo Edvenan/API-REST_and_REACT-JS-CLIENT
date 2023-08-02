@@ -180,20 +180,47 @@ class UserController extends BaseController
      */
     public function listPlayers()
     {
-        // get all users
-        $users = User::all();
-        
-        // get all players from users and their respective wins rates
-        foreach ($users as $user){
-            if ($user->role()->first()->role == 'player'){
-                $players[] = $user->attributesToArray() + array('winsRate' => $user->winsRate());
-            }
-        }
+        $players = $this->getAllPlayers();
 
-        // calculate all players average wins rate
+        // calculate all players' average wins rate
         $avg_winsRate = array_sum(array_column($players,'winsRate')) / count($players);
 
         return $this->sendResponse("List of players retrieved successfully.", ['players' => $players, 'avg_winsRate' => $avg_winsRate], 200);
+    }
+
+    /**
+     * Ranking
+     */
+    public function ranking()
+    {
+        $players = $this->getAllPlayers();
+        $players = $this->sortPlayersList($players);
+
+        return $this->sendResponse("Ranking retrieved successfully.", $players, 200);
+    }
+
+    /**
+     * Loser
+     */
+    public function loser()
+    {
+        $players = $this->getAllPlayers();
+        $players = $this->sortPlayersList($players);
+        $loser = end($players);
+
+        return $this->sendResponse("Loser retrieved successfully.", $loser, 200);
+    }
+
+    /**
+     * Winner
+     */
+    public function winner()
+    {
+        $players = $this->getAllPlayers();
+        $players = $this->sortPlayersList($players);
+        $winner = $players[0];
+        
+        return $this->sendResponse("Winner retrieved successfully.", $winner, 200);
     }
 
 
@@ -211,5 +238,35 @@ class UserController extends BaseController
             return false;
         }
         return true;
+    }
+
+    /**
+     * Helper function: Get all Players from Users and their respective wins rate
+     */
+    public function getAllPlayers()
+    {
+        // get all users
+        $users = User::all();
+        
+        // get all players from users and their respective wins rates
+        foreach ($users as $user){
+            if ($user->role()->first()->role == 'player'){
+                $players[] = $user->attributesToArray() + array('winsRate' => $user->winsRate());
+            }
+        }
+
+        return $players;
+    }
+
+    /**
+     * Helper function: sort Players list by wins rate in Desc order
+     */
+    public function sortPlayersList($players)
+    {
+        // Sort players array by average wins rate
+        $avg_winsRate = array_column($players,'winsRate');
+        array_multisort($avg_winsRate,SORT_DESC, $players);
+
+        return $players;
     }
 }
