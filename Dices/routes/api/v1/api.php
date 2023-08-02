@@ -18,8 +18,8 @@ use App\Http\Controllers\api\v1\GameController;
 
 // Routes accessible by any user
 Route::controller(UserController::class)->group(function () {
-    Route::post('/login', 'login');
-    Route::post('/players', 'register');
+    Route::post('/login', 'login');     // User login (Admin / Player)
+    Route::post('/players', 'register');    // Create Player
 });
 
 // Routes only accessible by authorized users with assigned roles
@@ -28,10 +28,10 @@ Route::middleware('auth:api', 'role')->group( function () {
     
     Route::middleware(['scope:admin,player'])->group( function () {
     
-        Route::post('/logout', [UserController::class, 'logout']);  // Logout
-        Route::put('/players/{id}', [UserController::class, 'edit']);  // Edit User name
-        Route::get('/players/{id}/games', [UserController::class, 'listGames']);  // List User games
-        Route::delete('/players/{id}/games/', [GameController::class, 'destroy']);  // Delete a user's Games
+        Route::post('/logout', [UserController::class, 'logout']);  // User Logout
+        Route::put('/players/{id}', [UserController::class, 'edit']);  // Edit a Player's name
+        Route::get('/players/{id}/games', [UserController::class, 'listGames']);  // List a Player's games
+        Route::delete('/players/{id}/games/', [GameController::class, 'destroy']);  // Delete a Player's Games
 
     });
 
@@ -48,6 +48,7 @@ Route::middleware('auth:api', 'role')->group( function () {
         Route::get('/players/ranking', [UserController::class, 'ranking']);  // Ranking
         Route::get('/players/ranking/loser', [UserController::class, 'loser']);  // Ranking Loser
         Route::get('/players/ranking/winner', [UserController::class, 'winner']);  // Ranking Winner
+        Route::delete('/players/{id}', [UserController::class, 'destroy']);  // Delete User
         
     });
 
@@ -69,13 +70,11 @@ GET /players: retorna el llistat de tots els jugadors/es del sistema amb el seu 
 GET /players/ranking: retorna el rànquing mitjà de tots els jugadors/es del sistema. És a dir, el percentatge mitjà d’èxits.
 GET /players/ranking/loser: retorna el jugador/a amb pitjor percentatge d’èxit.
 GET /players/ranking/winner: retorna el jugador/a amb millor percentatge d’èxit.
+DELETE /player/{id} : elimina un jugador, el seu rol i les seves jugades
 
 Pending
 ----------
-
-
-DELETE PLAYER (Admin)
- */
+*/
 
 
 
