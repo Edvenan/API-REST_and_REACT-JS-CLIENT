@@ -157,16 +157,16 @@ class UserController extends BaseController
         
         // Validate if Auth user can act on the target id data
         if ( ! $this->userValidation($id, $request) ){
-            return $this->sendError("Not authorized to list another user's games.", ['Auth User id : '.Auth::user()->id, 'Target User id : '.$id], 401); 
+            return $this->sendError("Forbidden. Not authorized to list another user's games.", ['Auth_User_Id' => Auth::user()->id, 'Target_User_Id' => $id], 403); 
         }
 
         $user = User::find($id);
 
         if(!$user) {
-            return $this->sendError("Can't list this user's games. User not found.", "Target User id = ".$id, 404);       
+            return $this->sendError("Not found. Can't list this user's games.", ["Target_User_Id" => $id], 404);       
         }
 
-        return $this->sendResponse("List of user's games retrieved successfully.", ['Auth User id: ' => Auth::user()->id, 'Target User id: ' => $user->id, 'Games: ' => $user->games(), 'Wins rate: ' => $user->winsRate()], 200);
+        return $this->sendResponse("List of user's games retrieved successfully.", ['Auth_User_Id' => Auth::user()->id, 'Target_User_Id' => $user->id, 'Games' => $user->games(), 'WinsRate' => $user->winsRate()], 200);
     }
 
     /**
