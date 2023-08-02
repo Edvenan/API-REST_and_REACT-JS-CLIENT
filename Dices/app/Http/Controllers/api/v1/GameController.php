@@ -59,14 +59,14 @@ class GameController extends BaseController
         
         // Validate if Auth user can act on the target id data
         if ( ! $this->userValidation($id) ){
-            return $this->sendError("Not authorized to delete another user's games.", ['Auth User id : '.Auth::user()->id, 'Target User id : '.$id], 401); 
+            return $this->sendError("Forbidden. Not authorized to delete another user's games.", ['Auth_User_Id' => Auth::user()->id, 'Target_User_Id' => $id], 403); 
         }
 
         // Validate if target user exists
         $user = User::find($id);
 
         if(!$user) {
-            return $this->sendError("Can't delete games for this user. User not found.", "Target User id = ".$id, 404);       
+            return $this->sendError("Not found. Can't delete games for this user. User not found.", ["Target_User_Id" => $id], 404);       
         }
         
         
