@@ -10,13 +10,6 @@ use Illuminate\Support\Facades\Auth;
 
 class GameController extends BaseController
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
 
     /**
      * Create new Game
@@ -25,14 +18,14 @@ class GameController extends BaseController
     {
         // Validate if Auth user can act on the target id data
         if ( ! $this->userValidation($id) ){
-            return $this->sendError("Not authorized to create another user's games.", ['Auth User id : '.Auth::user()->id, 'Target User id : '.$id], 401); 
+            return $this->sendError("Forbidden. Not authorized to create another user's games.", ['Auth_User_Id' => Auth::user()->id, 'Target_User_Id' => $id], 403); 
         }
 
         // Validate if target user exists
         $user = User::find($id);
 
         if(!$user) {
-            return $this->sendError("Can't create a game for this user. User not found.", "Target User id = ".$id, 404);       
+            return $this->sendError("Not found. Can't create a game for this user. User not found.", ["Target_User_Id" => $id], 404);       
         }
 
         // roll the dices
@@ -56,38 +49,6 @@ class GameController extends BaseController
 
         return $this->sendResponse("New game created successfully.", $new_game, 201);
 
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Game $game)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Game $game)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Game $game)
-    {
-        //
     }
 
     /**
