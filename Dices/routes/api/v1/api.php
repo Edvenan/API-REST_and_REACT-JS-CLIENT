@@ -18,41 +18,40 @@ use App\Http\Controllers\api\v1\GameController;
 
 // Routes accessible by any user
 Route::controller(UserController::class)->group(function () {
-    Route::post('/login', 'login')->name('login');
-    Route::post('/players', 'register')->name('register');
+    Route::post('/login', 'login');
+    Route::post('/players', 'register');
 });
 
-// Routes accessible by authorized users with assigned roles
+// Routes only accessible by authorized users with assigned roles
 Route::middleware('auth:api', 'role')->group( function () {
     
     
     Route::middleware(['scope:admin,player'])->group( function () {
     
-        Route::post('/logout', [UserController::class, 'logout'])->name('logout');  // Logout
-        Route::put('/players/{id}', [UserController::class, 'edit'])->name('edit');  // Edit User name
-        Route::get('/players/{id}/games', [UserController::class, 'listGames'])->name('listGames');  // List User games
-        Route::delete('/players/{id}/games/', [GameController::class, 'destroy'])->name('destroy');  // Delete a user's Games
+        Route::post('/logout', [UserController::class, 'logout']);  // Logout
+        Route::put('/players/{id}', [UserController::class, 'edit']);  // Edit User name
+        Route::get('/players/{id}/games', [UserController::class, 'listGames']);  // List User games
+        Route::delete('/players/{id}/games/', [GameController::class, 'destroy']);  // Delete a user's Games
 
     });
 
 
     Route::middleware(['scope:player'])->group( function () {
     
-        Route::post('/players/{id}/games/', [GameController::class, 'create'])->name('create');  // Create Game (Roll the dices)
-        
-
+        Route::post('/players/{id}/games/', [GameController::class, 'create']);  // Create Game (Roll the dices)
 
     });
 
     Route::middleware(['scope:admin'])->group( function () {
     
-        Route::get('/players', [UserController::class, 'listPlayers'])->name('listPlayers');  // List Players
+        Route::get('/players', [UserController::class, 'listPlayers']);  // List Players
+        Route::get('/players/ranking', [UserController::class, 'ranking']);  // Ranking
+        Route::get('/players/ranking/loser', [UserController::class, 'loser']);  // Ranking Loser
+        Route::get('/players/ranking/winner', [UserController::class, 'winner']);  // Ranking Winner
         
-
-
     });
 
-    // Route::resource('games', GameController::class);
+
 });
 
 
@@ -67,16 +66,13 @@ GET /players/{id}/games: retorna el llistat de jugades per un jugador/a.
 POST /players/{id}/games/ : un jugador/a específic realitza una tirada dels daus.
 DELETE /players/{id}/games: elimina les tirades del jugador/a.
 GET /players: retorna el llistat de tots els jugadors/es del sistema amb el seu percentatge mitjà d’èxits 
+GET /players/ranking: retorna el rànquing mitjà de tots els jugadors/es del sistema. És a dir, el percentatge mitjà d’èxits.
+GET /players/ranking/loser: retorna el jugador/a amb pitjor percentatge d’èxit.
+GET /players/ranking/winner: retorna el jugador/a amb millor percentatge d’èxit.
 
 Pending
 ----------
 
-
-GET /players: retorna el llistat de tots els jugadors/es del sistema amb el seu percentatge mitjà d’èxits 
-
-GET /players/ranking: retorna el rànquing mitjà de tots els jugadors/es del sistema. És a dir, el percentatge mitjà d’èxits.
-GET /players/ranking/loser: retorna el jugador/a amb pitjor percentatge d’èxit.
-GET /players/ranking/winner: retorna el jugador/a amb millor percentatge d’èxit.
 
 DELETE PLAYER (Admin)
  */
