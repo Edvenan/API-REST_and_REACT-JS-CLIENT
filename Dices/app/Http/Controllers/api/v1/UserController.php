@@ -122,15 +122,16 @@ class UserController extends BaseController
      */
     public function edit($id, Request $request)
     {
-        // Get current user's role
-        $current_user_role = Auth::user()->role()->first()->role;
-
-        // Do not allow to Edit another user's name if user's role is 'player'
-        if ( ($current_user_role == 'player') && (Auth::user()->id != $id) ){
-            return $this->sendError("Not authorized to modify another user's name.", ['User id : '.Auth::user()->id, 'Target User id : '.$id], 401); 
+        // Validate if Auth user can act on the target id data
+        if ( ! $this->userValidation($id, $request) ){
+            return $this->sendError("Not authorized to modify another user's name.", ['Auth User id : '.Auth::user()->id, 'Target User id : '.$id], 401); 
         }
 
         $user = User::find($id);
+
+        if(!$user) {
+            return $this->sendError("Can't edit user name. User not found.", "User id = ".$id, 404);       
+        }
 
         // user input validation
         $validator = Validator::make($request->all(), [
@@ -148,13 +149,46 @@ class UserController extends BaseController
         // If no name is given, we set it as 'anonymous'
         $request->name = $request->name == ''? 'Anonymous' : $request->name; 
 
-        if(!$user) {
-            return $this->sendError("Can't edit user name. User not found.", "User id = ".$id, 404);       
-        }
-
         $user->name = $request->name;
         $user->update();
 
         return $this->sendResponse('User name modified successfully.', $user->only(['id', 'name', 'email']), 201);
+    }
+
+    /**
+     * List user games
+     */
+    public function listGames($id, Request $request)
+    {
+        
+        // Validate if Auth user can act on the target id data
+        if ( ! $this->userValidation($id, $request) ){
+            return $this->sendError("Not authorized to list another user's games.", ['Auth User id : '.Auth::user()->id, 'Target User id : '.$id], 401); 
+        }
+
+        $user = User::find($id);
+
+        if(!$user) {
+            return $this->sendError("Can't list this user's games. User not found.", "Target User id = ".$id, 404);       
+        }
+
+        return $this->sendResponse("List of user's games retrieved successfully.", ['Auth User id: ' => Auth::user()->id, 'Target User id: ' => $user->id, 'Games: ' => $user->games(), 'Wins rate: ' => $user->winsRate()], 200);
+    }
+
+
+    /**
+     * Helper function: User validation
+     * Check if Auth user can act on target user's data
+     */
+    public function userValidation($id, Request $request)
+    {
+        // Get Auth user's role
+        $auth_user_role = Auth::user()->role()->first()->role;
+
+        // Do not allow to access another user's data if Auth user's role is 'player'
+        if ( ($auth_user_role == 'player') && (Auth::user()->id != $id) ) {
+            return false;
+        }
+        return true;
     }
 }
