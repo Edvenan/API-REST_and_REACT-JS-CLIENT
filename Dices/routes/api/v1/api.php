@@ -31,13 +31,15 @@ Route::middleware('auth:api', 'role')->group( function () {
         Route::post('/logout', [UserController::class, 'logout'])->name('logout');  // Logout
         Route::put('/players/{id}', [UserController::class, 'edit'])->name('edit');  // Edit User name
         Route::get('/players/{id}/games', [UserController::class, 'listGames'])->name('listGames');  // List User games
+        Route::delete('/players/{id}/games/', [GameController::class, 'destroy'])->name('destroy');  // Delete a user's Games
 
     });
 
 
     Route::middleware(['scope:player'])->group( function () {
     
-        Route::post('/players/{id}/games/', [GameController::class, 'create'])->name('create');  // Create Game (Throw dices)
+        Route::post('/players/{id}/games/', [GameController::class, 'create'])->name('create');  // Create Game (Roll the dices)
+        
 
 
     });
@@ -54,12 +56,13 @@ Done
 POST /players : crea un jugador/a.
 PUT /players/{id} : modifica el nom del jugador/a.
 GET /players/{id}/games: retorna el llistat de jugades per un jugador/a.
-
+POST /players/{id}/games/ : un jugador/a específic realitza una tirada dels daus.
+DELETE /players/{id}/games: elimina les tirades del jugador/a.
 
 Pending
 ----------
-POST /players/{id}/games/ : un jugador/a específic realitza una tirada dels daus.
-DELETE /players/{id}/games: elimina les tirades del jugador/a.
+
+
 GET /players: retorna el llistat de tots els jugadors/es del sistema amb el seu percentatge mitjà d’èxits 
 
 GET /players/ranking: retorna el rànquing mitjà de tots els jugadors/es del sistema. És a dir, el percentatge mitjà d’èxits.
