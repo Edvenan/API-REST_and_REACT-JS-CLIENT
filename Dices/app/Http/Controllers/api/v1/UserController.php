@@ -175,6 +175,27 @@ class UserController extends BaseController
         return $this->sendResponse("List of user's games retrieved successfully.", ['Auth User id: ' => Auth::user()->id, 'Target User id: ' => $user->id, 'Games: ' => $user->games(), 'Wins rate: ' => $user->winsRate()], 200);
     }
 
+    /**
+     * List players
+     */
+    public function listPlayers()
+    {
+        // get all users
+        $users = User::all();
+        
+        // get all players from users and their respective wins rates
+        foreach ($users as $user){
+            if ($user->role()->first()->role == 'player'){
+                $players[] = $user->attributesToArray() + array('winsRate' => $user->winsRate());
+            }
+        }
+
+        // calculate all players average wins rate
+        $avg_winsRate = array_sum(array_column($players,'winsRate')) / count($players);
+
+        return $this->sendResponse("List of players retrieved successfully.", ['players' => $players, 'avg_winsRate' => $avg_winsRate], 200);
+    }
+
 
     /**
      * Helper function: User validation
