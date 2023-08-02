@@ -44,6 +44,14 @@ Route::middleware('auth:api', 'role')->group( function () {
 
     });
 
+    Route::middleware(['scope:admin'])->group( function () {
+    
+        Route::get('/players', [UserController::class, 'listPlayers'])->name('listPlayers');  // List Players
+        
+
+
+    });
+
     // Route::resource('games', GameController::class);
 });
 
@@ -58,6 +66,7 @@ PUT /players/{id} : modifica el nom del jugador/a.
 GET /players/{id}/games: retorna el llistat de jugades per un jugador/a.
 POST /players/{id}/games/ : un jugador/a específic realitza una tirada dels daus.
 DELETE /players/{id}/games: elimina les tirades del jugador/a.
+GET /players: retorna el llistat de tots els jugadors/es del sistema amb el seu percentatge mitjà d’èxits 
 
 Pending
 ----------
