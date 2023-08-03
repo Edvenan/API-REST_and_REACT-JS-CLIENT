@@ -51,35 +51,19 @@ Route::middleware('auth:api', 'role')->group( function () {
         Route::delete('/players/{id}', [UserController::class, 'destroy']);  // Delete User
         
     });
-
-
 });
 
 
+// Redirected route when user token is not authorized
+Route::get('/', function () {
+    $response = [
+        'success' => false,
+        'message' => 'Unauthorized. Invalid token received. Please log in again.',
+    ];
 
+    // send 'unauthorized' response back to client
+    return response()->json($response, 401);
+})->name('login');
 
-/* 
-Done 
--------
-POST /players : crea un jugador/a.
-PUT /players/{id} : modifica el nom del jugador/a.
-GET /players/{id}/games: retorna el llistat de jugades per un jugador/a.
-POST /players/{id}/games/ : un jugador/a específic realitza una tirada dels daus.
-DELETE /players/{id}/games: elimina les tirades del jugador/a.
-GET /players: retorna el llistat de tots els jugadors/es del sistema amb el seu percentatge mitjà d’èxits 
-GET /players/ranking: retorna el rànquing mitjà de tots els jugadors/es del sistema. És a dir, el percentatge mitjà d’èxits.
-GET /players/ranking/loser: retorna el jugador/a amb pitjor percentatge d’èxit.
-GET /players/ranking/winner: retorna el jugador/a amb millor percentatge d’èxit.
-DELETE /player/{id} : elimina un jugador, el seu rol i les seves jugades
-
-Pending
-----------
-*/
-
-
-
-/* Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-}); */
 
 
