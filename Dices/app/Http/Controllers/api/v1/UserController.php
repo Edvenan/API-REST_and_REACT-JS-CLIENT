@@ -118,7 +118,7 @@ class UserController extends BaseController
     {
         // Validate if Auth user can act on the target id data
         if ( ! $this->userValidation($id, $request) ){
-            return $this->sendError("Forbidden. Not authorized to modify another user's name.", ['Auth_User_Id'.Auth::user()->id, 'Target_User_Id : '.$id], 403); 
+            return $this->sendError("Forbidden. Not authorized to modify another user's name.", ['Auth_User_Id' => Auth::user()->id, 'Target_User_Id' => $id], 403); 
         }
 
         $user = User::find($id);
