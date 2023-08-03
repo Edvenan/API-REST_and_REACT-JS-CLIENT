@@ -166,7 +166,7 @@ class UserController extends BaseController
             return $this->sendError("Not found. Can't list this user's games.", ["Target_User_Id" => $id], 404);       
         }
 
-        return $this->sendResponse("List of user's games retrieved successfully.", ['Auth_User_Id' => Auth::user()->id, 'Target_User_Id' => $user->id, 'Games' => $user->games(), 'WinsRate' => $user->winsRate()], 200);
+        return $this->sendResponse("List of user's games retrieved successfully.", ['Auth_User_Id' => Auth::user()->id, 'Target_User_Id' => $user->id, 'Games' => $user->games, 'WinsRate' => $user->winsRate()], 200);
     }
 
     /**

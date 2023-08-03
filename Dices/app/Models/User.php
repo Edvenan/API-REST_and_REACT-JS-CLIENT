@@ -55,11 +55,12 @@ class User extends Authenticatable
 
     /**
      * Method to list all the player's games
-     * ordered by date
+     * add the One-To-Many relationship between User and Game Model.
      */
     // 
-    public function games(){
-        return Game::where('user_id', $this->id)->orderBy('created_at', 'asc')->get();
+    public function games()
+    {
+        return $this->hasMany(Game::class);
     }
 
     /**
@@ -68,7 +69,7 @@ class User extends Authenticatable
     // 
     public function winsRate(){
         if ($this->games()->count()) {
-        return floatval($this->gameS()->where('result', 1)->count() / $this->games()->count());
+        return floatval($this->games->where('result', 1)->count() / $this->games->count());
         }
         return 0;
     }
