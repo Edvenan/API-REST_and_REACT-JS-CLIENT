@@ -27,7 +27,7 @@ class UserController extends BaseController
             'name' => 'string|max:255|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6',
-            'c_password' => 'same:password',
+            'c_password' => 'required|same:password',
         ]);
      
         if($validator->fails()){
@@ -92,7 +92,7 @@ class UserController extends BaseController
             return $this->sendResponse('User logged in successfully.', $data, 201);
         }
         
-        return $this->sendError('Unauthorized. Invalid credentials.', 401);  
+        return $this->sendError('Unauthorized. Invalid credentials.',[], 401);  
     }
 
     /**
