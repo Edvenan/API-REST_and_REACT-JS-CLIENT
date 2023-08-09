@@ -52,7 +52,7 @@ class GameController extends BaseController
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete a user's games
      */
     public function destroy($id)
     {
