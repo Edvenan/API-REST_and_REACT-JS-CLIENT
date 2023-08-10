@@ -24,7 +24,7 @@ class AuthorizationTest extends BaseTestCase
             'c_password' => 'password',
         ]);
 
-        $response->dump()->assertStatus(201)->assertSee('created_at');
+        $response->assertStatus(201)->assertSee('created_at');
     }
     /** @test */
     public function a_user_registers_with_different_confirmed_password(): void
@@ -47,7 +47,7 @@ class AuthorizationTest extends BaseTestCase
             'c_password' => 'password',
         ]);
 
-        $response->dump()->assertSuccessful()->assertJsonPath('data.name', 'Anonymous');
+        $response->assertSuccessful()->assertJsonPath('data.name', 'Anonymous');
     }
     /** @test */
     public function two_users_register_with_blank_names_and_both_get_anonymous(): void
@@ -58,7 +58,7 @@ class AuthorizationTest extends BaseTestCase
             'password' => 'password',
             'c_password' => 'password',
         ]);
-        $response->dump()->assertSuccessful()->assertJsonPath('data.name', 'Anonymous');
+        $response->assertSuccessful()->assertJsonPath('data.name', 'Anonymous');
 
         $response = $this->post(self::URL .'/players', [
             'email' => 'php@sample.com',
@@ -66,7 +66,7 @@ class AuthorizationTest extends BaseTestCase
             'c_password' => 'password',
         ]);
 
-        $response->dump()->assertSuccessful()->assertJsonPath('data.name', 'Anonymous');
+        $response->assertSuccessful()->assertJsonPath('data.name', 'Anonymous');
     }
     /** @test */
     public function a_user_registers_with_same_name_as_another_user(): void
@@ -86,7 +86,7 @@ class AuthorizationTest extends BaseTestCase
             'c_password' => 'password',
         ]);
 
-        $response->dump()->assertBadRequest()->assertSee('The name has already been taken.');
+        $response->assertBadRequest()->assertSee('The name has already been taken.');
     }
     /** @test */
     public function a_user_registers_with_same_email_as_another_user(): void
@@ -106,7 +106,7 @@ class AuthorizationTest extends BaseTestCase
             'c_password' => 'password',
         ]);
 
-        $response->dump()->assertBadRequest()->assertSee('The email has already been taken.');
+        $response->assertBadRequest()->assertSee('The email has already been taken.');
     }
 
     /**
