@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
+
 //use Illuminate\Foundation\Auth\User;
 
 class UserController extends BaseController
@@ -24,7 +25,7 @@ class UserController extends BaseController
     {
         // user input validation
         $validator = Validator::make($request->all(), [
-            'name' => 'string|max:255|unique:users',
+            'name' => 'nullable|string|max:255|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6',
             'c_password' => 'required|same:password',
@@ -50,7 +51,7 @@ class UserController extends BaseController
             'role' => 'player'
         ]);
    
-        return $this->sendResponse('User register successfully.', $user, 201);
+        return $this->sendResponse('User registered successfully.', $user, 201);
     
     }
 
