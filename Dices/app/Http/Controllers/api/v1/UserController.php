@@ -134,17 +134,19 @@ class UserController extends BaseController
         ]);
 
         if($validator->fails()){
-            // handle if validation fails because new name = crrent name, 
+            // handle if validation fails because new name = current name, 
             if( $request->name == $user->name){
                 return $this->sendError('Bad request. New user name matches current user name. User name has not been modified.', $user, 400);
             }
             return $this->sendError('Bad request. Validation Error.', $validator->errors(), 400);       
         }
 
-        // If no name is given, we set it as 'anonymous'
-        $request->name = $request->name == ''? 'Anonymous' : $request->name; 
+        if($request->missing('name')){
+            return $this->sendError('Bad request. No user name given. User name has not been modified.', $user, 400);
+        }
 
-        $user->name = $request->name;
+        // If blank name is given, we set it as 'anonymous'
+        $user->name = $request->name == ''? 'Anonymous' : $request->name; 
         $user->update();
 
         return $this->sendResponse('User name modified successfully.', $user, 201);
