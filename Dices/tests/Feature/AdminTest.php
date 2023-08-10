@@ -25,7 +25,7 @@ class AdminTest extends BaseTestCase
             'Authorization' => 'Bearer '.$admin->createToken('TestToken',[$admin_scope])->accessToken,])
             ->get(self::URL .'/players/'.$player->id.'/games');
 
-        $response->dump()->assertSuccessful()->assertSee('WinsRate');
+        $response->assertSuccessful()->assertSee('WinsRate');
         $this->assertAuthenticated($guard = 'api');
     }
     /** @test */
@@ -37,7 +37,7 @@ class AdminTest extends BaseTestCase
             'Authorization' => 'Bearer '.$admin->createToken('TestToken',[$admin_scope])->accessToken,])
             ->get(self::URL .'/players/'.'1000'.'/games');
 
-        $response->dump()->assertNotFound();
+        $response->assertNotFound();
         $this->assertAuthenticated($guard = 'api');
     }
 
@@ -55,7 +55,7 @@ class AdminTest extends BaseTestCase
             'Authorization' => 'Bearer '.$admin->createToken('TestToken',[$admin_scope])->accessToken,])
             ->get(self::URL .'/players/');
 
-        $response->dump()->assertSuccessful()->assertSee('winsRate')->assertSee('avg_winsRate');
+        $response->assertSuccessful()->assertSee('winsRate')->assertSee('avg_winsRate');
         $this->assertAuthenticated($guard = 'api');
     }
     
@@ -73,7 +73,7 @@ class AdminTest extends BaseTestCase
             'Authorization' => 'Bearer '.$admin->createToken('TestToken',[$admin_scope])->accessToken,])
             ->get(self::URL .'/players/ranking');
 
-        $response->dump()->assertSuccessful()->assertSee('winsRate')->assertDontSee('avg_winsRate');
+        $response->assertSuccessful()->assertSee('winsRate')->assertDontSee('avg_winsRate');
         $this->assertAuthenticated($guard = 'api');
     }
 
@@ -91,7 +91,7 @@ class AdminTest extends BaseTestCase
             'Authorization' => 'Bearer '.$admin->createToken('TestToken',[$admin_scope])->accessToken,])
             ->get(self::URL .'/players/ranking/loser');
 
-        $response->dump()->assertSuccessful()->assertSee('winsRate')->assertDontSee('avg_winsRate');
+        $response->assertSuccessful()->assertSee('winsRate')->assertDontSee('avg_winsRate');
         $this->assertAuthenticated($guard = 'api');
     }
 
@@ -109,7 +109,7 @@ class AdminTest extends BaseTestCase
             'Authorization' => 'Bearer '.$admin->createToken('TestToken',[$admin_scope])->accessToken,])
             ->get(self::URL .'/players/ranking/winner');
 
-        $response->dump()->assertSuccessful()->assertSee('winsRate')->assertDontSee('avg_winsRate');
+        $response->assertSuccessful()->assertSee('winsRate')->assertDontSee('avg_winsRate');
         $this->assertAuthenticated($guard = 'api');
     }
 
@@ -125,7 +125,7 @@ class AdminTest extends BaseTestCase
             'Authorization' => 'Bearer '.$user->createToken('TestToken',[$scope])->accessToken,])
             ->put(self::URL .'/players/'.$user->id, ['name' => 'New Dummy Name']);
 
-        $response->dump()->assertSuccessful()->assertJsonPath('data.name', 'New Dummy Name');
+        $response->assertSuccessful()->assertJsonPath('data.name', 'New Dummy Name');
         $this->assertAuthenticated($guard = 'api');
     }
     /** @test */
@@ -138,7 +138,7 @@ class AdminTest extends BaseTestCase
             'Authorization' => 'Bearer '.$admin->createToken('TestToken',[$admin_scope])->accessToken,])
             ->put(self::URL .'/players/'.$player->id, ['name' => 'New Dummy Name']);
 
-        $response->dump()->assertSuccessful();
+        $response->assertSuccessful();
         $this->assertAuthenticated($guard = 'api');
     }
 
@@ -156,7 +156,7 @@ class AdminTest extends BaseTestCase
             'Authorization' => 'Bearer '.$admin->createToken('TestToken',[$admin_scope])->accessToken,])
             ->delete(self::URL .'/players/'.'5'.'/games', []);
 
-        $response->dump()->assertSuccessful();
+        $response->assertSuccessful();
         $this->assertAuthenticated($guard = 'api');
     }
 
@@ -174,7 +174,7 @@ class AdminTest extends BaseTestCase
             'Authorization' => 'Bearer '.$admin->createToken('TestToken',[$admin_scope])->accessToken,])
             ->delete(self::URL .'/players/'.'5', []);
 
-        $response->dump()->assertSuccessful();
+        $response->assertSuccessful();
         $this->assertAuthenticated($guard = 'api');
     }
     /** @test */
@@ -186,7 +186,7 @@ class AdminTest extends BaseTestCase
             'Authorization' => 'Bearer '.$admin->createToken('TestToken',[$admin_scope])->accessToken,])
             ->delete(self::URL .'/players/'.$admin->id, []);
 
-        $response->dump()->assertForbidden();
+        $response->assertForbidden();
         $this->assertAuthenticated($guard = 'api');
     }
 
