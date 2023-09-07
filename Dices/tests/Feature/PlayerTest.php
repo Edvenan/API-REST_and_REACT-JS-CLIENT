@@ -67,7 +67,7 @@ class PlayerTest extends BaseTestCase
             'Authorization' => 'Bearer '.$user->createToken('TestToken',[$scope])->accessToken,])
             ->get(self::URL .'/players/'.$user->id.'/games');
 
-        $response->dump()->assertSuccessful()->assertSee('WinsRate');
+        $response->assertSuccessful()->assertSee('WinsRate');
         $this->assertAuthenticated($guard = 'api');
     }
     /** @test */
@@ -79,7 +79,7 @@ class PlayerTest extends BaseTestCase
             'Authorization' => 'Bearer '.$user->createToken('TestToken',[$scope])->accessToken,])
             ->get(self::URL .'/players/'.($user->id+1).'/games');
 
-        $response->dump()->assertForbidden();
+        $response->assertForbidden();
         $this->assertAuthenticated($guard = 'api');
     }
     /** @test */
@@ -91,7 +91,7 @@ class PlayerTest extends BaseTestCase
             'Authorization' => 'Bearer '.'Wrong.Token.'])
             ->get(self::URL .'/players/'.$user->id.'/games');
 
-        $response->dump()->assertRedirect();
+        $response->assertRedirect();
         $this->assertGuest($guard = 'api');
     }
 
@@ -107,7 +107,7 @@ class PlayerTest extends BaseTestCase
             'Authorization' => 'Bearer '.$user->createToken('TestToken',[$scope])->accessToken,])
             ->put(self::URL .'/players/'.$user->id, ['name' => 'New Dummy Name']);
 
-        $response->dump()->assertSuccessful()->assertJsonPath('data.name', 'New Dummy Name');
+        $response->assertSuccessful()->assertJsonPath('user.name', 'New Dummy Name');
         $this->assertAuthenticated($guard = 'api');
     }
     /** @test */
@@ -119,7 +119,7 @@ class PlayerTest extends BaseTestCase
             'Authorization' => 'Bearer '.$user->createToken('TestToken',[$scope])->accessToken,])
             ->put(self::URL .'/players/'.$user->id, ['name' => '']);
 
-        $response->dump()->assertSuccessful()->assertJsonPath('data.name', 'Anonymous');
+        $response->assertSuccessful()->assertJsonPath('user.name', 'Anonymous');
         $this->assertAuthenticated($guard = 'api');
     }
     /** @test */
@@ -131,7 +131,7 @@ class PlayerTest extends BaseTestCase
             'Authorization' => 'Bearer '.$user->createToken('TestToken',[$scope])->accessToken,])
             ->put(self::URL .'/players/'.$user->id, ['name' => $user->name]);
 
-        $response->dump()->assertBadRequest();
+        $response->assertBadRequest();
         $this->assertAuthenticated($guard = 'api');
     }
     /** @test */
@@ -143,7 +143,7 @@ class PlayerTest extends BaseTestCase
             'Authorization' => 'Bearer '.$user->createToken('TestToken',[$scope])->accessToken,])
             ->put(self::URL .'/players/'.($user->id+1), ['name' => 'New Dummy Name']);
 
-        $response->dump()->assertForbidden();
+        $response->assertForbidden();
         $this->assertAuthenticated($guard = 'api');
     }
     /** @test */
@@ -155,7 +155,7 @@ class PlayerTest extends BaseTestCase
             'Authorization' => 'Bearer '.$user->createToken('TestToken',[$scope])->accessToken,])
             ->put(self::URL .'/players/'.$user->id, ['email' => 'Dummy@email.com']);
 
-        $response->dump()->assertBadRequest();
+        $response->assertBadRequest();
         $this->assertAuthenticated($guard = 'api');
     }
     /** @test */
@@ -167,7 +167,7 @@ class PlayerTest extends BaseTestCase
             'Authorization' => 'Bearer '.'Wrong.Token.'])
             ->put(self::URL .'/players/'.$user->id, ['name' => 'New Dummy Name']);
 
-        $response->dump()->assertRedirect();
+        $response->assertRedirect();
         $this->assertGuest($guard = 'api');
     }
 
@@ -183,7 +183,7 @@ class PlayerTest extends BaseTestCase
             'Authorization' => 'Bearer '.$user->createToken('TestToken',[$scope])->accessToken,])
             ->delete(self::URL .'/players/'.$user->id.'/games', []);
 
-        $response->dump()->assertSuccessful();
+        $response->assertSuccessful();
         $this->assertAuthenticated($guard = 'api');
     }
     /** @test */
@@ -195,7 +195,7 @@ class PlayerTest extends BaseTestCase
             'Authorization' => 'Bearer '.$user->createToken('TestToken',[$scope])->accessToken,])
             ->delete(self::URL .'/players/'.($user->id+1).'/games', []);
 
-        $response->dump()->assertForbidden();
+        $response->assertForbidden();
         $this->assertAuthenticated($guard = 'api');
     }
     /** @test */
@@ -208,7 +208,7 @@ class PlayerTest extends BaseTestCase
             'Authorization' => 'Bearer '.$user->createToken('TestToken',[$scope])->accessToken,])
             ->delete(self::URL .'/players/'.$user->id.'/games', []);
 
-        $response->dump()->assertSuccessful();
+        $response->assertSuccessful();
         $this->assertAuthenticated($guard = 'api');
     }
     /** @test */
@@ -220,7 +220,7 @@ class PlayerTest extends BaseTestCase
             'Authorization' => 'Bearer '.'Wrong.Token.'])
             ->delete(self::URL .'/players/'.$user->id.'/games', []);
 
-        $response->dump()->assertRedirect();
+        $response->assertRedirect();
         $this->assertGuest($guard = 'api');
     }
 
