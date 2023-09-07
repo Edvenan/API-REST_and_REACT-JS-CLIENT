@@ -17,27 +17,24 @@ const Header = () => {
     const config = { headers: { Authorization: `Bearer ${tokenRef.current}` } };
     const bodyParameters = { key: "value" };
     
-    function login_form() {
+    function login_form(email=null) {
 
         Swal.fire({
             title: 'Login Form',
-            html: `<input type="email" id="email" class="swal2-input" autocomplete='false' placeholder="Email" >
-            <input type="password" id="password" class="swal2-input" autocomplete='false' placeholder="Password">`,
+            html: `<input type="email" id="email" class="swal2-input" autocomplete='on' ${email?`value=${email}`: "placeholder='Email'"} >
+            <input type="password" id="password" class="swal2-input" autocomplete='off' placeholder="Password">`,
             confirmButtonText: 'Sign in',
             focusConfirm: false,
             preConfirm: () => {
-              const email = Swal.getPopup().querySelector('#email').value
-              const password = Swal.getPopup().querySelector('#password').value
-              if (!email || !password ) {
+              const input_email = Swal.getPopup().querySelector('#email').value
+              const input_password = Swal.getPopup().querySelector('#password').value
+              if (!input_email || !input_password ) {
                 Swal.showValidationMessage(`Please enter email and password`)
               }
-              return { email: email, password: password}
+              return { email: input_email, password: input_password}
             }
           }).then((result) => {
-            /* Swal.fire(`
-              Email: ${result.value.email}
-              Password: ${result.value.password}
-            `.trim()) */
+
             if (result.isDismissed) return;
             emailRef.current = result.value.email;
             passwordRef.current = result.value.password;
@@ -64,18 +61,19 @@ const Header = () => {
         }, (err) => {
             const msg = err.response.data.message;
             toast.update(id, {render: "Oops! " + msg?msg:"Something went wrong...", type:"error", isLoading: false, autoClose: 3000 });
+            login_form(email);
           });
     }
 
-    function register_form() {
+    function register_form(name=null, email=null) {
 
         Swal.fire({
             title: 'Register Form',
             html: `
-            <input type="text" id="name" class="swal2-input" placeholder="Name">
-            <input type="email" id="email" class="swal2-input" placeholder="Email" required>
-            <input type="password" id="password" class="swal2-input" minlength="6" required placeholder="Password">
-            <input type="password" id="c_password" class="swal2-input" placeholder="Confirm password">
+            <input type="text" id="name" class="swal2-input" autocomplete='on'  ${name?`value=${name}`: "placeholder='Name'"}>
+            <input type="email" id="email" class="swal2-input" autocomplete='on'  ${email?`value=${email}`: "placeholder='Email'"} required>
+            <input type="password" id="password" class="swal2-input" minlength="6" required  autocomplete='off' placeholder="Password">
+            <input type="password" id="c_password" class="swal2-input"  autocomplete='off' placeholder="Confirm password">
             `,
             confirmButtonText: 'Sign in',
             focusConfirm: true,
@@ -119,7 +117,7 @@ const Header = () => {
             // Get the first key in the object
             const firstKey = Object.keys(msg)[0];
             toast.update(id, {render: "Oops! " + msg[firstKey], type:"error", isLoading: false, autoClose: 3000 });
-            register_form();
+            register_form(name, email);
         });
     }
 
@@ -173,10 +171,10 @@ const Header = () => {
                         </div>
                         <div className="flex ">
                             <div className="mr-4 text-xs cursor-pointer sm:text-sm text-yellow-300 hover:text-[darkgoldenrod]"
-                                onClick={login_form}>Login
+                                onClick={() => login_form()}>Login
                             </div>
                             <div className="mr-4 text-xs cursor-pointer sm:text-sm text-yellow-300 hover:text-[darkgoldenrod]"
-                            onClick={register_form}>Register
+                            onClick={() => register_form()}>Register
                             </div>
                         </div>
                     </>
