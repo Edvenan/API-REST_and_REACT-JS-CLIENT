@@ -68,9 +68,8 @@ class GameController extends BaseController
         if(!$user) {
             return $this->sendError("Not found. Can't delete games for this user. User not found.", ["Target_User_Id" => $id], 404);       
         }
-        
-        
-        Game::destroy($user->games());
+                
+        Game::destroy($user->games);
 
         return $this->sendResponse("Games deleted successfully.", "" , 200);
     }

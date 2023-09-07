@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\v1\UserController;
 use App\Http\Controllers\api\v1\GameController;
@@ -31,14 +30,14 @@ Route::middleware('auth:api', 'role')->group( function () {
         Route::post('/logout', [UserController::class, 'logout']);  // User Logout
         Route::put('/players/{id}', [UserController::class, 'edit']);  // Edit a Player's name
         Route::get('/players/{id}/games', [UserController::class, 'listGames']);  // List a Player's games
-        Route::delete('/players/{id}/games/', [GameController::class, 'destroy']);  // Delete a Player's Games
+        Route::delete('/players/{id}/games', [GameController::class, 'destroy']);  // Delete a Player's Games
 
     });
 
 
     Route::middleware(['scope:player'])->group( function () {
     
-        Route::post('/players/{id}/games/', [GameController::class, 'create']);  // Create Game (Roll the dices)
+        Route::post('/players/{id}/games', [GameController::class, 'create']);  // Create Game (Roll the dices)
 
     });
 

@@ -107,7 +107,9 @@ class PlayerTest extends BaseTestCase
             'Authorization' => 'Bearer '.$user->createToken('TestToken',[$scope])->accessToken,])
             ->put(self::URL .'/players/'.$user->id, ['name' => 'New Dummy Name']);
 
+
         $response->assertSuccessful()->assertJsonPath('user.name', 'New Dummy Name');
+
         $this->assertAuthenticated($guard = 'api');
     }
     /** @test */
@@ -120,6 +122,7 @@ class PlayerTest extends BaseTestCase
             ->put(self::URL .'/players/'.$user->id, ['name' => '']);
 
         $response->assertSuccessful()->assertJsonPath('user.name', 'Anonymous');
+
         $this->assertAuthenticated($guard = 'api');
     }
     /** @test */
