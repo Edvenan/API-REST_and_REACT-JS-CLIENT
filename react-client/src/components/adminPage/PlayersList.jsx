@@ -32,7 +32,6 @@ function PlayerRow({ item, onOption, player, setPlayer, active, setActive}) {
     function showPlayerGames(item) {
         setActive(active => 'games');
         setPlayer(player => item);
-        /* setGamesList(gamesList => []); */
         onOption(["gamesList", item]); 
     }
     function editPlayerName(item) {
@@ -48,12 +47,12 @@ function PlayerRow({ item, onOption, player, setPlayer, active, setActive}) {
                     const bodyParameters = {
                         'name': inputValue
                      };
-                     const id = toast.loading("Editing user name...");
+                     const id = toast.loading("Editing player's name...");
                      axios.put(`http://localhost:8000/api/v1/players/${item.id}`,bodyParameters, config).then(res => {
                         setRefresh(!refresh);
-                        toast.update(id, {render:"User name edited successfully!", type:"success", isLoading: false, autoClose: 2000 });
+                        toast.update(id, {render:"Player's name edited successfully!", type:"success", isLoading: false, autoClose: 2000 });
                     }, (err) => {
-                        toast.update(id, {render: "User name could not be edited!", type:"error", isLoading: false, autoClose: 3000 });
+                        toast.update(id, {render: "Player's name could not be edited!", type:"error", isLoading: false, autoClose: 3000 });
                     });
                 }
             });         

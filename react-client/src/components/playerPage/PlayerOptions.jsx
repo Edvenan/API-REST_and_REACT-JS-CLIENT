@@ -28,9 +28,6 @@ export default function PlayerOptions () {
                 allowEnterKey:false,
                 preConfirm: (inputValue) => {
 
-                    if (inputValue === '') {
-                        inputValue='Anonymous';
-                    }
                     // Http request
                     const bodyParameters = {
                         'name': inputValue
