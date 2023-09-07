@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-use Database\Factories\RoleFactory;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Game;
+use App\Models\User;
+use \App\Models\Role;
 use Illuminate\Database\Seeder;
 
 class UsersTableSeeder extends Seeder
@@ -13,12 +14,19 @@ class UsersTableSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
 
-        \App\Models\User::factory(3)->create()
-        ->each(function($user) {
-            $user->role()->save(\App\Models\Role::factory()->make());
-        });
+        // Create Admin user
+        User::factory()
+            ->create(['name' => 'SuperUser', 
+            'email' => 'admin@admin.com'])
+            ->role()->create(['role' => 'admin']);
+
+
+        // Create Players and Games for each Player
+        User::factory(10)
+            ->has(Role::factory())
+            ->has(Game::factory(10))
+            ->create();
 
     }
 }

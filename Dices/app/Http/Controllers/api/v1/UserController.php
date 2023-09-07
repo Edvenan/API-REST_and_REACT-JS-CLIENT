@@ -33,7 +33,9 @@ class UserController extends BaseController
         ]);
      
         if($validator->fails()){
+
             return $this->sendError('Bad request. Validation Error.',['error' => $validator->errors()], 400);       
+
         }
 
         // If no name is given, we set it as 'anonymous'
@@ -52,10 +54,12 @@ class UserController extends BaseController
             'role' => 'player'
         ]);
    
+
         $data['user'] = $user;
         $data['role'] = 'player';
 
         return $this->sendResponse('User registered successfully.', $data, 201);
+
     
     }
 
@@ -88,11 +92,13 @@ class UserController extends BaseController
                 return $this->sendError('Not found. User with no role assigned.', 404); 
             }
             
+
             $this->scope = $userRole;
 
             // create OAuth Access Token, adding scope to it
             $data['user'] = $user;
             $data['role'] = $userRole;
+
             $data['token'] = $user->createToken($user->email."'s token", [$this->scope])->accessToken;
 
             return $this->sendResponse('User logged in successfully.', $data, 201);
@@ -113,7 +119,9 @@ class UserController extends BaseController
         // delete entry (Token) in Oauth Access Tokens table
         Auth::user()->tokens()->delete();
         
+
         return $this->sendResponse('User logged out successfully.', ['user' => Auth::user()], 201);
+
     }
 
     /**
@@ -140,6 +148,7 @@ class UserController extends BaseController
         if($validator->fails()){
             // handle if validation fails because new name = current name, 
             if( $request->name == $user->name){
+
                 return $this->sendError('Bad request. New user name matches current user name. User name has not been modified.', ['data' => $user], 400);
             }
             // handle if validation fails because new name = anonymous, 
@@ -151,13 +160,16 @@ class UserController extends BaseController
 
         if($request->missing('name')){
             return $this->sendError('Bad request. No user name given. User name has not been modified.',['data' => $user], 400);
+
         }
 
         // If blank name is given, we set it as 'anonymous'
         $user->name = $request->name == ''? 'Anonymous' : $request->name; 
         $user->update();
+
         $data['user'] = $user;
         return $this->sendResponse('User name modified successfully.', $data, 201);
+
     }
 
     /**
@@ -177,7 +189,9 @@ class UserController extends BaseController
             return $this->sendError("Not found. Can't list this user's games.", ["Target_User_Id" => $id], 404);       
         }
 
+
         return $this->sendResponse("List of user's games retrieved successfully.", ['Auth_User_Id' => Auth::user()->id, 'Target_User_Id' => $user->id, 'Target_User' => $user, 'WinsRate' => $user->winsRate()], 200);
+
     }
 
     /**
@@ -254,7 +268,9 @@ class UserController extends BaseController
         
         $user->delete();
         
+
         return $this->sendResponse("User deleted successfully.", [], 200);
+
     }
 
     /**
