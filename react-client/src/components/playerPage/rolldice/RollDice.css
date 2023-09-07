@@ -1,0 +1,60 @@
+/* RollDice.css File */
+.RollDice {
+	display: flex;
+	flex-flow: column nowrap;
+	/*min-height: 100vh;*/
+}
+
+/* Shows each dice in one row */
+.RollDice-container {
+	display: flex;
+	justify-content: center;
+	align-content: center;
+}
+
+/* Styling rolldice button */
+@keyframes pulse {
+    25% {
+        opacity: .25;
+    }
+}
+
+.RollDice button {
+	width: 15em;
+	width: 120px;
+	padding: 1.5em;
+	padding: 10px;
+	border-width: 4px;
+
+	animation: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+	
+	border-radius: 10px;
+	
+	font-weight: bold;
+	
+	--tw-text-opacity: 1;
+    color: rgb(253 224 71 / var(--tw-text-opacity));
+	border-color:rgb(253 224 71/ var(--tw-bg-opacity));
+    box-shadow: 0 8px 16px 0 rgba(249, 248, 248, 0.2), 0 6px 20px 0 rgba(247, 244, 244, 0.19);
+
+	background-color:black;
+	margin-top: 3em;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	align-self: center;
+}
+
+/* Setting hover effect on button */
+.RollDice button:hover {
+	cursor: pointer;
+	color: darkgoldenrod;
+	border-color: darkgoldenrod;
+}
+
+.RollDice-rolling {
+	border-width: 4px;
+	border-radius: 10px;
+	border-color: black;
+	background-color: black !important;
+	opacity: 0.7
+}
