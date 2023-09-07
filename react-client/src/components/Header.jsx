@@ -21,8 +21,8 @@ const Header = () => {
 
         Swal.fire({
             title: 'Login Form',
-            html: `<input type="email" id="email" class="swal2-input" placeholder="Email" >
-            <input type="password" id="password" class="swal2-input" placeholder="Password">`,
+            html: `<input type="email" id="email" class="swal2-input" autocomplete='false' placeholder="Email" >
+            <input type="password" id="password" class="swal2-input" autocomplete='false' placeholder="Password">`,
             confirmButtonText: 'Sign in',
             focusConfirm: false,
             preConfirm: () => {
