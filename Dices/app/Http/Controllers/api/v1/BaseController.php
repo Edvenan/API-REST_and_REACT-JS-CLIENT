@@ -14,14 +14,10 @@ class BaseController extends Controller
      */
     public function sendResponse($message, $data = [], $code)
     {
-    	$response = [
+    	$response = array_merge([
             'success' => true,
             'message' => $message,
-        ];
-
-        if(!empty($data)){
-            $response['data'] = $data;
-        }
+        ], $data);
 
         return response()->json($response, $code);
     }
@@ -34,16 +30,10 @@ class BaseController extends Controller
      */
     public function sendError($error, $errorMessages = [], $code = 404)
     {
-    	$response = [
+    	$response = array_merge([
             'success' => false,
             'message' => $error,
-        ];
-
-
-        if(!empty($errorMessages)){
-            $response['data'] = $errorMessages;
-        }
-
+        ], $errorMessages);
 
         return response()->json($response, $code);
     }

@@ -5,25 +5,20 @@ namespace App\Http\Controllers\api\v1;
 use App\Http\Controllers\api\v1\BaseController as BaseController;
 use App\Models\Role;
 use App\Models\User;
+use ErrorException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+
 
 //use Illuminate\Foundation\Auth\User;
 
 class UserController extends BaseController
 {
 
-    // We define in constructor which methods can be called by an unauthorized user.
-    // In order to call any other method, the user must use a valid token
-    public function __construct()
-    {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
-    }
-
     /**
-     * Register api
+     * Create Player
      *
      * @return \Illuminate\Http\Response
      */
@@ -31,14 +26,14 @@ class UserController extends BaseController
     {
         // user input validation
         $validator = Validator::make($request->all(), [
-            'name' => 'string|max:255|unique:users',
+            'name' => 'nullable|string|max:255|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6',
-            'c_password' => 'same:password',
+            'c_password' => 'required|same:password',
         ]);
      
         if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors(), 400);       
+            return $this->sendError('Bad request. Validation Error.',['error' => $validator->errors()], 400);       
         }
 
         // If no name is given, we set it as 'anonymous'
@@ -57,13 +52,15 @@ class UserController extends BaseController
             'role' => 'player'
         ]);
    
-        return $this->sendResponse('User register successfully.', $user->only(['name','email']), 201);
+        $data['user'] = $user;
+        $data['role'] = 'player';
+
+        return $this->sendResponse('User registered successfully.', $data, 201);
     
     }
 
-    
     /**
-     * Login api
+     * User Login
      *
      * @return \Illuminate\Http\Response
      */
@@ -76,7 +73,7 @@ class UserController extends BaseController
         ]);
      
         if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors());       
+            return $this->sendError('Validation Error.', ['error' => $validator->errors()], 400);      
         }
 
         $credentials = $request->only(['email', 'password']);
@@ -85,24 +82,27 @@ class UserController extends BaseController
             $user = Auth::user();
             
             // get user's role and set its scope
-            $userRole = $user->role()->first();
+            $userRole = $user->role()->first()->role;
             
-            if ($userRole) {
-                $this->scope = $userRole->role;
+            if (!$userRole) {
+                return $this->sendError('Not found. User with no role assigned.', 404); 
             }
+            
+            $this->scope = $userRole;
 
             // create OAuth Access Token, adding scope to it
-            $data['name'] = $user->name;
+            $data['user'] = $user;
+            $data['role'] = $userRole;
             $data['token'] = $user->createToken($user->email."'s token", [$this->scope])->accessToken;
 
             return $this->sendResponse('User logged in successfully.', $data, 201);
         }
         
-        return $this->sendError('Invalid credentials.', 401);  
+        return $this->sendError('Unauthorized. Invalid credentials.',[], 401);  
     }
 
     /**
-     * Logout api
+     * User Logout
      *
      * @return \Illuminate\Http\Response
      */
@@ -110,11 +110,10 @@ class UserController extends BaseController
     {
         // delete first entry in Roles table
         //Role::where('user_id', Auth::user()->id)->delete();
-        
         // delete entry (Token) in Oauth Access Tokens table
         Auth::user()->tokens()->delete();
         
-        return $this->sendResponse('User logged out successfully.', Auth::user()->only(['name', 'email']), 201);
+        return $this->sendResponse('User logged out successfully.', ['user' => Auth::user()], 201);
     }
 
     /**
@@ -124,13 +123,13 @@ class UserController extends BaseController
     {
         // Validate if Auth user can act on the target id data
         if ( ! $this->userValidation($id, $request) ){
-            return $this->sendError("Not authorized to modify another user's name.", ['Auth User id : '.Auth::user()->id, 'Target User id : '.$id], 401); 
+            return $this->sendError("Forbidden. Not authorized to modify another user's name.", ['Auth_User_Id' => Auth::user()->id, 'Target_User_Id' => $id], 403); 
         }
 
         $user = User::find($id);
 
         if(!$user) {
-            return $this->sendError("Can't edit user name. User not found.", "User id = ".$id, 404);       
+            return $this->sendError("Not found. Can't edit user name.", ["Target_User_Id" => $id], 404);       
         }
 
         // user input validation
@@ -139,20 +138,26 @@ class UserController extends BaseController
         ]);
 
         if($validator->fails()){
-            // handle if validation fails because new name = crrent name, 
+            // handle if validation fails because new name = current name, 
             if( $request->name == $user->name){
-                return $this->sendError('New user name matches current user name. User name has not been modified.', $user->only(['id', 'name', 'email']), 400);
+                return $this->sendError('Bad request. New user name matches current user name. User name has not been modified.', ['data' => $user], 400);
             }
-            return $this->sendError('Validation Error.', $validator->errors(), 400);       
+            // handle if validation fails because new name = anonymous, 
+            else if( $request->name == 'Anonymous'){
+                // don't send report and continue
+            }
+            else return $this->sendError('Bad request. Validation Error.',['error' => $validator->errors()], 400);      
         }
 
-        // If no name is given, we set it as 'anonymous'
-        $request->name = $request->name == ''? 'Anonymous' : $request->name; 
+        if($request->missing('name')){
+            return $this->sendError('Bad request. No user name given. User name has not been modified.',['data' => $user], 400);
+        }
 
-        $user->name = $request->name;
+        // If blank name is given, we set it as 'anonymous'
+        $user->name = $request->name == ''? 'Anonymous' : $request->name; 
         $user->update();
-
-        return $this->sendResponse('User name modified successfully.', $user->only(['id', 'name', 'email']), 201);
+        $data['user'] = $user;
+        return $this->sendResponse('User name modified successfully.', $data, 201);
     }
 
     /**
@@ -163,16 +168,16 @@ class UserController extends BaseController
         
         // Validate if Auth user can act on the target id data
         if ( ! $this->userValidation($id, $request) ){
-            return $this->sendError("Not authorized to list another user's games.", ['Auth User id : '.Auth::user()->id, 'Target User id : '.$id], 401); 
+            return $this->sendError("Forbidden. Not authorized to list another user's games.", ['Auth_User_Id' => Auth::user()->id, 'Target_User_Id' => $id], 403); 
         }
 
         $user = User::find($id);
 
         if(!$user) {
-            return $this->sendError("Can't list this user's games. User not found.", "Target User id = ".$id, 404);       
+            return $this->sendError("Not found. Can't list this user's games.", ["Target_User_Id" => $id], 404);       
         }
 
-        return $this->sendResponse("List of user's games retrieved successfully.", ['Auth User id: ' => Auth::user()->id, 'Target User id: ' => $user->id, 'Games: ' => $user->games(), 'Wins rate: ' => $user->winsRate()], 200);
+        return $this->sendResponse("List of user's games retrieved successfully.", ['Auth_User_Id' => Auth::user()->id, 'Target_User_Id' => $user->id, 'Target_User' => $user, 'WinsRate' => $user->winsRate()], 200);
     }
 
     /**
@@ -183,7 +188,7 @@ class UserController extends BaseController
         $players = $this->getAllPlayers();
 
         // calculate all players' average wins rate
-        $avg_winsRate = array_sum(array_column($players,'winsRate')) / count($players);
+        $avg_winsRate = empty($players)? 0 : array_sum(array_column($players,'winsRate')) / count($players);
 
         return $this->sendResponse("List of players retrieved successfully.", ['players' => $players, 'avg_winsRate' => $avg_winsRate], 200);
     }
@@ -194,9 +199,9 @@ class UserController extends BaseController
     public function ranking()
     {
         $players = $this->getAllPlayers();
-        $players = $this->sortPlayersList($players);
+        $ranking = $this->addRank($players);
 
-        return $this->sendResponse("Ranking retrieved successfully.", $players, 200);
+        return $this->sendResponse("Ranking retrieved successfully.",['ranking'=>$ranking], 200);
     }
 
     /**
@@ -205,10 +210,14 @@ class UserController extends BaseController
     public function loser()
     {
         $players = $this->getAllPlayers();
-        $players = $this->sortPlayersList($players);
-        $loser = end($players);
+        $ranking = $this->addRank($players);
 
-        return $this->sendResponse("Loser retrieved successfully.", $loser, 200);
+        $lowest = collect($ranking)->max('rank');
+
+        $loser = collect($ranking)->where('rank', $lowest)->values()->toArray();
+        $loser = empty($loser)? [] : $loser;
+
+        return $this->sendResponse("Loser retrieved successfully.", ['loser'=>$loser], 200);
     }
 
     /**
@@ -217,12 +226,36 @@ class UserController extends BaseController
     public function winner()
     {
         $players = $this->getAllPlayers();
-        $players = $this->sortPlayersList($players);
-        $winner = $players[0];
-        
-        return $this->sendResponse("Winner retrieved successfully.", $winner, 200);
+        $ranking = $this->addRank($players);
+
+        $highest_rank = collect($ranking)->min('rank');
+
+        $winner = collect($ranking)->where('rank', $highest_rank)->values()->toArray();
+        $winner = empty($winner)? [] : $winner;
+
+
+        return $this->sendResponse("Winner retrieved successfully.", ['winner'=>$winner], 200);
     }
 
+    /**
+     * Delete User
+     */
+    public function destroy($id)
+    {
+        $user = User::find($id);
+
+        if(!$user) {
+            return $this->sendError("Not found. User could not be deleted.", ["User_Id" => $id], 404);       
+        }
+
+        if (Auth::user()->id == $id){
+            return $this->sendError("Forbidden. User cannot delete itself.", ["User_Id" => $id], 403);    
+        }
+        
+        $user->delete();
+        
+        return $this->sendResponse("User deleted successfully.", [], 200);
+    }
 
     /**
      * Helper function: User validation
@@ -245,6 +278,8 @@ class UserController extends BaseController
      */
     public function getAllPlayers()
     {
+        $players = [];
+
         // get all users
         $users = User::all();
         
@@ -254,7 +289,6 @@ class UserController extends BaseController
                 $players[] = $user->attributesToArray() + array('winsRate' => $user->winsRate());
             }
         }
-
         return $players;
     }
 
@@ -263,10 +297,36 @@ class UserController extends BaseController
      */
     public function sortPlayersList($players)
     {
-        // Sort players array by average wins rate
-        $avg_winsRate = array_column($players,'winsRate');
-        array_multisort($avg_winsRate,SORT_DESC, $players);
+        // Sort players array by wins rate
+        $players_winsRate = array_column($players,'winsRate');
+        array_multisort($players_winsRate,SORT_DESC, $players);
 
         return $players;
+    }
+
+    /**
+     * Helper function: takes sorted player list as input and returns Players list with new key:value pair for rank
+     */
+    public function addRank($players){
+        // Get the top-scoring player's score (the winner's score) or return [] if not found
+        try {
+            $sorted_players = $this->sortPlayersList($players);
+            $topScore = collect($sorted_players)->max('winsRate');
+        } catch (ErrorException $e) {
+            return [];
+        }
+        
+        // add rank to each player's data
+        $prev_winsRate = $topScore;
+        $rank = 1;
+        $ranked_players =[];
+
+        foreach ($sorted_players as $player){
+            $rank = $player['winsRate'] < $prev_winsRate? $rank+1 : $rank;
+            $prev_winsRate = $player['winsRate'];
+            $ranked_players[] = $player + array('rank' => $rank);
+        }
+
+        return $ranked_players;
     }
 }
