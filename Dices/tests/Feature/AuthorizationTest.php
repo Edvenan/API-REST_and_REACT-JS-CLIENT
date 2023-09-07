@@ -48,6 +48,7 @@ class AuthorizationTest extends BaseTestCase
         ]);
 
         $response->assertSuccessful()->assertJsonPath('user.name', 'Anonymous');
+
     }
     /** @test */
     public function two_users_register_with_blank_names_and_both_get_anonymous(): void
@@ -58,6 +59,7 @@ class AuthorizationTest extends BaseTestCase
             'password' => 'password',
             'c_password' => 'password',
         ]);
+
         $response->assertSuccessful()->assertJsonPath('user.name', 'Anonymous');
 
         $response = $this->post(self::URL .'/players', [
