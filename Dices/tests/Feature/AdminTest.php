@@ -125,7 +125,7 @@ class AdminTest extends BaseTestCase
             'Authorization' => 'Bearer '.$user->createToken('TestToken',[$scope])->accessToken,])
             ->put(self::URL .'/players/'.$user->id, ['name' => 'New Dummy Name']);
 
-        $response->assertSuccessful()->assertJsonPath('data.name', 'New Dummy Name');
+        $response->assertSuccessful()->assertJsonPath('user.name', 'New Dummy Name');
         $this->assertAuthenticated($guard = 'api');
     }
     /** @test */
@@ -137,8 +137,8 @@ class AdminTest extends BaseTestCase
         $response = $this->withHeaders([
             'Authorization' => 'Bearer '.$admin->createToken('TestToken',[$admin_scope])->accessToken,])
             ->put(self::URL .'/players/'.$player->id, ['name' => 'New Dummy Name']);
-
-        $response->assertSuccessful();
+        
+        $response->assertSuccessful()->assertJsonPath('user.id', $player->id)->assertJsonPath('user.name', 'New Dummy Name');
         $this->assertAuthenticated($guard = 'api');
     }
 
