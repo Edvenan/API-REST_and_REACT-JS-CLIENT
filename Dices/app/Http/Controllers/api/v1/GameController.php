@@ -47,7 +47,7 @@ class GameController extends BaseController
                         'result' => $result,
         ]);
 
-        return $this->sendResponse("New game created successfully.", $new_game, 201);
+        return $this->sendResponse("New game created successfully.",['Game' => $new_game, 'WinsRate' => $user->winsRate()], 201);
 
     }
 
@@ -71,7 +71,7 @@ class GameController extends BaseController
                 
         Game::destroy($user->games);
 
-        return $this->sendResponse("Games deleted successfully.", "" , 200);
+        return $this->sendResponse("Games deleted successfully.", [] , 200);
     }
 
     /**
