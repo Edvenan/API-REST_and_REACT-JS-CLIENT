@@ -47,7 +47,8 @@ class AuthorizationTest extends BaseTestCase
             'c_password' => 'password',
         ]);
 
-        $response->assertSuccessful()->assertJsonPath('data.name', 'Anonymous');
+        $response->assertSuccessful()->assertJsonPath('user.name', 'Anonymous');
+
     }
     /** @test */
     public function two_users_register_with_blank_names_and_both_get_anonymous(): void
@@ -58,7 +59,8 @@ class AuthorizationTest extends BaseTestCase
             'password' => 'password',
             'c_password' => 'password',
         ]);
-        $response->assertSuccessful()->assertJsonPath('data.name', 'Anonymous');
+
+        $response->assertSuccessful()->assertJsonPath('user.name', 'Anonymous');
 
         $response = $this->post(self::URL .'/players', [
             'email' => 'php@sample.com',
@@ -66,7 +68,7 @@ class AuthorizationTest extends BaseTestCase
             'c_password' => 'password',
         ]);
 
-        $response->assertSuccessful()->assertJsonPath('data.name', 'Anonymous');
+        $response->assertSuccessful()->assertJsonPath('user.name', 'Anonymous');
     }
     /** @test */
     public function a_user_registers_with_same_name_as_another_user(): void
@@ -121,8 +123,8 @@ class AuthorizationTest extends BaseTestCase
         $response = $this->post(self::URL.'/login', $credentials);
 
         $response->assertStatus(201)
-                 ->assertJsonPath('data.token', fn (string $token) => strlen($token) >= 3);
-        $this->assertArrayHasKey('token', $response['data']);
+                 ->assertJsonPath('token', fn (string $token) => strlen($token) >= 3);
+        $this->assertArrayHasKey('token', $response);
         $this->assertCredentials( $credentials, $guard = 'api');
     }
     /** @test */
