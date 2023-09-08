@@ -1,5 +1,5 @@
 import React from 'react';
-import { Slide,  Zoom } from 'react-slideshow-image';
+import { Slide } from 'react-slideshow-image';
 import 'react-slideshow-image/dist/styles.css';
 import slide1 from './../images/slide1.jpg';
 import slide2 from './../images/slide2.jpg';
