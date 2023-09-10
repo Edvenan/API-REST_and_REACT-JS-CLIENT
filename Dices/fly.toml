@@ -1,0 +1,40 @@
+# fly.toml app configuration file generated for rolling-dices-api on 2023-09-08T17:21:35+02:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = "rolling-dices-api"
+primary_region = "mad"
+console_command = "php /var/www/html/artisan tinker"
+
+[build]
+  [build.args]
+    NODE_VERSION = "18"
+    PHP_VERSION = "8.2"
+
+[env]
+  # Set any env vars you want here
+  # Caution: Don't add secrets here
+  APP_URL = "https://rolling-dices-api.fly.dev"
+  APP_ENV = "production"
+  DB_CONNECTION = "mysql"
+  DB_HOST = "dices-mysql.internal"
+  DB_DATABASE= "dices"
+  LOG_CHANNEL = "stderr"
+  LOG_LEVEL = "info"
+  LOG_STDERR_FORMATTER = "Monolog\\Formatter\\JsonFormatter"
+  SESSION_DRIVER = "cookie"
+  SESSION_SECURE_COOKIE = "true"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
+
+[deploy]
+  passport_command = "php /var/www/html/artisan passport:install"
+  release_command = "php /var/www/html/artisan migrate --force"
+  seeder_command = "php /var/www/html/artisan db:seed"
