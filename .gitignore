@@ -24,3 +24,6 @@ Homestead.json
 MyNotes.md
 .vscode/launch.json
 MyNotes REACT.md
+
+# Local Netlify folder
+.netlify
