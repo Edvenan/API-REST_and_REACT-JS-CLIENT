@@ -10,12 +10,12 @@ import 'react-toastify/dist/ReactToastify.css';
 const Header = () => {
 
     const navigate = useNavigate();
-    const [isLoggedIn, setIsLoggedIn, user, setUser, roleRef, tokenRef, gamesList, setGamesList, winsRate, setWinsRate] = useContext(AuthContext);
+    const [api_urlRef,isLoggedIn, setIsLoggedIn,, setUser, roleRef, tokenRef,, setGamesList,, setWinsRate] = useContext(AuthContext);
     const emailRef = useRef();
     const passwordRef = useRef();
     const nameRef = useRef();
     const config = { headers: { Authorization: `Bearer ${tokenRef.current}` } };
-    const bodyParameters = { key: "value" };
+    const URL = api_urlRef.current;
     
     function login_form(email=null) {
 
@@ -46,11 +46,16 @@ const Header = () => {
         let email = emailRef.current;
         let password = passwordRef.current;
         const id = toast.loading("Login in progress...")
-        axios.post("http://localhost:8000/api/v1/login", {email, password}).then(res => {
+        axios.post(`${URL}/login`, {email, password}).then(res => {
             tokenRef.current = res.data.token;
             setUser(res.data.user);
             roleRef.current = res.data.role;
             setIsLoggedIn(true);
+            // store the user in sessionStorage
+            sessionStorage.setItem('user',JSON.stringify(res.data.user) );
+            sessionStorage.setItem('token',JSON.stringify(res.data.token) );
+            sessionStorage.setItem('role',JSON.stringify(res.data.role) );
+
             if (roleRef.current === 'player'){
                 navigate("/player");
             }else if (roleRef.current === 'admin'){
@@ -106,7 +111,7 @@ const Header = () => {
         let c_password = passwordRef.current;
         const id = toast.loading("Registration in progress...")
 
-        axios.post("http://localhost:8000/api/v1/players", {name, email, password, c_password}).then(res => {
+        axios.post(`${URL}/players`, {name, email, password, c_password}).then(res => {
 
             toast.update(id, {render:"Registration successful!. Please login.", type:"success", isLoading: false, autoClose: 2000});
             login_form();
@@ -121,10 +126,11 @@ const Header = () => {
         });
     }
 
+    
     function logout(){
 
         const id = toast.loading("Loging out...")
-        axios.post("http://localhost:8000/api/v1/logout",[], config).then(res => {
+        axios.post(`${URL}/logout`,[], config).then(res => {
             
             toast.update(id, {render:"Logout successful!", type:"success", isLoading: false, autoClose: 1000 });
             setIsLoggedIn(false);
@@ -140,6 +146,7 @@ const Header = () => {
             navigate("/");
             toast.update(id, {render: "Oops! Invalid Token! Logging out anyway...", type:"error", isLoading: false, autoClose: 3000 });
         });
+        sessionStorage.clear();
     }
 
     return (

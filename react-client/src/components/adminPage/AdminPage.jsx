@@ -16,28 +16,24 @@ import PlayerGames from './PlayerGames';
 
 export default function AdminPage() {
 
+    const [, isLoggedIn,,,,roleRef,,,,,,,,,,,,,setRefresh] = useContext(AuthContext);
+    const navigate = useNavigate();
     const [player, setPlayer] = useState(null);
     const [option, setOption] = useState(<Ranking/>);
-
-
-    const [isLoggedIn, setIsLoggedIn, user, setUser, roleRef, tokenRef, gamesList, setGamesList, 
-        winsRate, setWinsRate, playersList, setPlayersList, avgWinsRate, setAvgWinsRate,
-        ranking, setRanking, refresh, setRefresh] = useContext(AuthContext);
-    const navigate = useNavigate();
     const [active, setActive] = useState('king');
 
 
     //runs only once after the page is first rendered
     useEffect(() => {
-        if (!isLoggedIn){
+        if (!isLoggedIn ){
             navigate("/");
+            console.log(roleRef.current);
         }
     }, []);
 
     function handleOption(chosenOption){
 
         if (chosenOption === "refresh"){
-            /* setOption(<Ranking />); */
             setRefresh(refresh => !refresh);
         }
         else if (chosenOption === "ranking"){

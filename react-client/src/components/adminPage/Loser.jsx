@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import AuthContext from '../../services/AuthContext';
 import { toast } from 'react-toastify';
 import foto from './../../images/green-background.jpg';
@@ -20,10 +20,9 @@ function PlayerRow({ player, rank }) {
 }
 
 function Loser({onOption, setPlayer}) {
-    const [isLoggedIn, setIsLoggedIn, user, setUser, roleRef, tokenRef, gamesList, setGamesList, 
-        winsRate, setWinsRate, playersList, setPlayersList, avgWinsRate, setAvgWinsRate,
-        ranking, setRanking, refresh] = useContext(AuthContext);
+    const [api_urlRef,,,,,, tokenRef,,,,,,,,,,, refresh] = useContext(AuthContext);
     const config = { headers: { Authorization: `Bearer ${tokenRef.current}` } };
+    const URL = api_urlRef.current;
     const [loser, setLoser] =useState([]);
 
 
@@ -35,7 +34,7 @@ function Loser({onOption, setPlayer}) {
     useEffect(() => {
         setLoser(loser => []);
         // Get Loser
-        axios.get(`http://localhost:8000/api/v1/players/ranking/loser`,config).then(res => {
+        axios.get(`${URL}/players/ranking/loser`,config).then(res => {
             setLoser(loser => res.data.loser && (res.data.loser).length>0? res.data.loser: ['nf']);
         }, (err) => {
             toast.error("Ranking could not be loaded!", {theme:"coloured", autoClose: 3000 });

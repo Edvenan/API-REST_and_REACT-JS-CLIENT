@@ -4,7 +4,7 @@ import foto from './../../images/green-background.jpg';
 
 const PlayerDetails = () => {
     
-    const [isLoggedIn, setIsLoggedIn, user, setUser, roleRef, tokenRef, gamesList] = useContext(AuthContext);
+    const [,,, user,,,, gamesList] = useContext(AuthContext);
 
     // Format date to dd-mm-yy hh:mm
     const dateString = user.created_at;
