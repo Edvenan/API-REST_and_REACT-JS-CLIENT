@@ -12,7 +12,7 @@ import PlayerScore from './PlayerScore';
 
 function PlayerPage() {
 
-    const [isLoggedIn] = useContext(AuthContext);
+    const [,isLoggedIn] = useContext(AuthContext);
     const navigate = useNavigate();
 
     //runs only once after the page is first rendered

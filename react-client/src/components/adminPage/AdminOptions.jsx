@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import OptionButton from '../OptionButton';
 import Swal from 'sweetalert2'
 import AuthContext from '../../services/AuthContext';
@@ -8,9 +8,9 @@ import foto from './../../images/green-background.jpg';
 
 const AdminOptions = ({onOption, active, setActive}) => {
     
-    const [isLoggedIn, setIsLoggedIn, user, setUser, roleRef, tokenRef] = useContext(AuthContext);
+    const [api_urlRef,,, user, setUser,, tokenRef] = useContext(AuthContext);
     const config = { headers: { Authorization: `Bearer ${tokenRef.current}` } };
-
+    const URL = api_urlRef.current;
     
 
     function handleClick(action){
@@ -32,7 +32,7 @@ const AdminOptions = ({onOption, active, setActive}) => {
                         'name': inputValue
                      };
                      const id = toast.loading("Editing user name...");
-                     axios.put(`http://localhost:8000/api/v1/players/${user.id}`,bodyParameters, config).then(res => {
+                     axios.put(`${URL}/players/${user.id}`,bodyParameters, config).then(res => {
                         // change player's name
                         setUser(res.data.user);
                         // confirm player's name change

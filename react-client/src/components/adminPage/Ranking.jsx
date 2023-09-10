@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import AuthContext from '../../services/AuthContext';
 import { toast } from 'react-toastify';
 import foto from './../../images/green-background.jpg';
@@ -20,11 +20,9 @@ function PlayerRow({ player, rank }) {
 }
 
 function Ranking({onOption, setPlayer}) {
-    const [isLoggedIn, setIsLoggedIn, user, setUser, roleRef, tokenRef, gamesList, setGamesList, 
-        winsRate, setWinsRate, playersList, setPlayersList, avgWinsRate, setAvgWinsRate,
-        ranking, setRanking,refresh ] = useContext(AuthContext);
+    const [api_urlRef,,,,,, tokenRef,,,,,,,,,ranking, setRanking,refresh ] = useContext(AuthContext);
     const config = { headers: { Authorization: `Bearer ${tokenRef.current}` } };
-
+    const URL = api_urlRef.current;
     const rows = [];
 
     ranking.forEach((player) => {
@@ -36,7 +34,7 @@ function Ranking({onOption, setPlayer}) {
     useEffect(() => {
         setRanking(ranking => []);
         // Load Ranking
-        axios.get(`http://localhost:8000/api/v1/players/ranking`,config).then(res => {
+        axios.get(`${URL}/players/ranking`,config).then(res => {
             // list player's games
             setRanking(ranking => res.data.ranking && res.data.ranking.length>0? res.data.ranking: ['nf']);
         }, (err) => {

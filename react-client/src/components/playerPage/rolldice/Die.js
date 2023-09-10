@@ -12,7 +12,7 @@ render(){
 	return (
 			<div>
 				<FontAwesomeIcon icon={['fas', `fa-dice-${face}`]} 
-				className={`text-7xl sm:text-8xl  p-1 pt-0 sm:p-8 text-[slateblue] text-white
+				className={`text-7xl sm:text-8xl  p-1 pt-0 sm:p-8  text-white
 				${rolling && 'Die-shaking'}`} />
 			</div >
 		)

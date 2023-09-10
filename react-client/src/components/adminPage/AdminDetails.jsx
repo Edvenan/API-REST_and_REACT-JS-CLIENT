@@ -3,7 +3,7 @@ import AuthContext from "../../services/AuthContext";
 import foto from './../../images/green-background.jpg';
 
 const AdminDetails = () => {
-    const [isLoggedIn, setIsLoggedIn, user] = useContext(AuthContext);
+    const [,,, user] = useContext(AuthContext);
 
     // Format date to dd-mm-yy hh:mm
     const dateString = user.created_at;

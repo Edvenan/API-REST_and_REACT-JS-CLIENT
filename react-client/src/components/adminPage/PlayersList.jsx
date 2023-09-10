@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import axios from 'axios';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import AuthContext from '../../services/AuthContext';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2'
@@ -8,11 +8,10 @@ import Swal from 'sweetalert2'
 
 function PlayerRow({ item, onOption, player, setPlayer, active, setActive}) {
 
-    const [isLoggedIn, setIsLoggedIn, user, setUser, roleRef, tokenRef, gamesList, setGamesList, 
-        winsRate, setWinsRate, playersList, setPlayersList, avgWinsRate, setAvgWinsRate,
-        ranking, setRanking, refresh, setRefresh] = useContext(AuthContext);
+    const [api_urlRef,,,,,, tokenRef,,,,,,,,,,, refresh, setRefresh] = useContext(AuthContext);
 
     const config = { headers: { Authorization: `Bearer ${tokenRef.current}` } };
+    const URL = api_urlRef.current;
 
     // Format date to dd-mm-yy hh:mm
     const dateString = item.created_at;
@@ -48,7 +47,7 @@ function PlayerRow({ item, onOption, player, setPlayer, active, setActive}) {
                         'name': inputValue
                      };
                      const id = toast.loading("Editing player's name...");
-                     axios.put(`http://localhost:8000/api/v1/players/${item.id}`,bodyParameters, config).then(res => {
+                     axios.put(`${URL}/players/${item.id}`,bodyParameters, config).then(res => {
                         setRefresh(!refresh);
                         toast.update(id, {render:"Player's name edited successfully!", type:"success", isLoading: false, autoClose: 2000 });
                     }, (err) => {
@@ -72,7 +71,7 @@ function PlayerRow({ item, onOption, player, setPlayer, active, setActive}) {
             if (result.isConfirmed) {
                 // delete games
                  const id = toast.loading(`Deleting ${item.name}'s games...`);
-                 axios.delete(`http://localhost:8000/api/v1/players/${item.id}/games`,config).then(res => {
+                 axios.delete(`${URL}/players/${item.id}/games`,config).then(res => {
                     setRefresh(!refresh);
                     toast.update(id, {render:`${item.name}'s games deleted successfully!`, type:"success", isLoading: false, autoClose: 2000 });
                 }, (err) => {
@@ -97,8 +96,10 @@ function PlayerRow({ item, onOption, player, setPlayer, active, setActive}) {
             if (result.isConfirmed) {
                 // Delete player
                  const id = toast.loading(`Deleting player ${item.name}...`);
-                 axios.delete(`http://localhost:8000/api/v1/players/${item.id}`,config).then(res => {
-                    if (active = "games" && player && player.id === item.id) onOption("ranking");
+                 axios.delete(`${URL}/players/${item.id}`,config).then(res => {
+                    if (active === "games" && player && player.id === item.id) {
+                        onOption("ranking");
+                    }
                     setRefresh(!refresh);
                     toast.update(id, {render:`Player ${item.name} deleted successfully!`, type:"success", isLoading: false, autoClose: 2000 });
                 }, (err) => {
@@ -142,11 +143,9 @@ function PlayerRow({ item, onOption, player, setPlayer, active, setActive}) {
 }
 
 function PlayersList({onOption, player, setPlayer, active, setActive}) {
-    const [isLoggedIn, setIsLoggedIn, user, setUser, roleRef, tokenRef, gamesList, setGamesList, 
-        winsRate, setWinsRate, playersList, setPlayersList, avgWinsRate, setAvgWinsRate,
-        ranking, setRanking,refresh] = useContext(AuthContext);
+    const [api_urlRef,,,,,, tokenRef,,,,, playersList, setPlayersList,, setAvgWinsRate,,,refresh] = useContext(AuthContext);
     const config = { headers: { Authorization: `Bearer ${tokenRef.current}` } };
-
+    const URL = api_urlRef.current;
     const rows = [];
 
     playersList.forEach((item) => {
@@ -159,7 +158,7 @@ function PlayersList({onOption, player, setPlayer, active, setActive}) {
     useEffect(() => {
         setPlayersList(playersList =>[]);
         // Get list of Players and respective Wins Rate
-        axios.get(`http://localhost:8000/api/v1/players`,config).then(res => {
+        axios.get(`${URL}/players`,config).then(res => {
             
             setPlayersList(playersList => res.data.players && res.data.players.length>0? res.data.players: ['nf']);
             setAvgWinsRate(avgWinsRate => res.data.avg_winsRate);

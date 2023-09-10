@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect } from "react";
 import AuthContext from "../../services/AuthContext";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
@@ -34,10 +34,11 @@ function GameRow({ game }) {
 
 function GamesTable() {
 
-    const [isLoggedIn, setIsLoggedIn, user, setUser, roleRef, tokenRef, gamesList, setGamesList, 
-        winsRate, setWinsRate, playersList, setPlayersList, avgWinsRate, setAvgWinsRate,
-        ranking, setRanking, refresh] = useContext(AuthContext);
+    const [api_urlRef,,, user,,, tokenRef, gamesList, setGamesList, 
+        , setWinsRate,,,,,,, refresh] = useContext(AuthContext);
     const config = { headers: { Authorization: `Bearer ${tokenRef.current}` } };
+    const URL = api_urlRef.current;
+
     const rows = [];
 
     gamesList.forEach((game) => {  
@@ -46,7 +47,7 @@ function GamesTable() {
 
     useEffect(() => {
         // Get Players Games and Wins Rate
-        axios.get(`http://localhost:8000/api/v1/players/${user.id}/games`,config).then(res => {
+        axios.get(`${URL}/players/${user.id}/games`,config).then(res => {
 
             setGamesList(gamesList => res.data.Target_User.games? res.data.Target_User.games: ['nf']);
             setWinsRate(winsRate => res.data.WinsRate);

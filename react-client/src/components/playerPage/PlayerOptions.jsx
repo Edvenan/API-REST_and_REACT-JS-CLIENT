@@ -1,4 +1,4 @@
-import { useContext, useRef, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import OptionButton from '../OptionButton';
 import Swal from 'sweetalert2'
 import AuthContext from '../../services/AuthContext';
@@ -9,11 +9,11 @@ import foto from './../../images/green-background.jpg';
 
 export default function PlayerOptions () {
     
-    const [isLoggedIn, setIsLoggedIn, user, setUser, roleRef, tokenRef, gamesList, setGamesList, winsRate, setWinsRate] = useContext(AuthContext);
+    const [api_urlRef,,, user, setUser,, tokenRef,, setGamesList,, setWinsRate] = useContext(AuthContext);
     const config = { headers: { Authorization: `Bearer ${tokenRef.current}` } };
 
     const [active, setActive] = useState("Game");
-    const nameRef = useRef();
+    const URL = api_urlRef.current;
 
     function handleClick(action) {
         setActive(action.slice(-4));
@@ -33,7 +33,7 @@ export default function PlayerOptions () {
                         'name': inputValue
                      };
                      const id = toast.loading("Editing user name...");
-                     axios.put(`http://localhost:8000/api/v1/players/${user.id}`,bodyParameters, config).then(res => {
+                     axios.put(`${URL}/players/${user.id}`,bodyParameters, config).then(res => {
                         // change player's name
                         setUser(res.data.user);
                         // confirm player's name change
@@ -62,7 +62,7 @@ export default function PlayerOptions () {
                 if (result.isConfirmed) {
                     // Http request
                      const id = toast.loading("Deleting player games...");
-                     axios.delete(`http://localhost:8000/api/v1/players/${user.id}/games`,config).then(res => {
+                     axios.delete(`${URL}/players/${user.id}/games`,config).then(res => {
                         // deleted player's games
                         setGamesList(['nf']);
                         setWinsRate(0);

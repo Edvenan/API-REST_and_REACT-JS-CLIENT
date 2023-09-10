@@ -4,7 +4,7 @@ import foto from './../../images/green-background.jpg';
 
 const PlayerScore = () => {
 
-    const [isLoggedIn, setIsLoggedIn, user, setUser, roleRef, tokenRef, gamesList, setGamesList, winsRate, setWinsRate] = useContext(AuthContext);
+    const [,,,,,,,,,winsRate] = useContext(AuthContext);
 
     return (
 

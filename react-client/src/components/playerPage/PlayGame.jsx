@@ -10,7 +10,7 @@ const PlayGame = () => {
 
         <div className="flex flex-grow border-4 border-yellow-300 bg-black mb-0.5 px-2  
                         justify-center bg-no-repeat bg-center bg-cover" style={{ 'backgroundImage': `url(${slide1})` }} >
-            <div className="flex flex-col items-center">    
+            <div className="flex flex-col items-center w-full">    
                 <h1 className="my-2 font-bold text-xl sm:text-2xl text-center text-white animate-pulse ">
                     Play a new Game!
                 </h1>

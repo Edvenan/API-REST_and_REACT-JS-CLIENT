@@ -3,7 +3,7 @@ import AuthContext from "../../services/AuthContext";
 import foto from './../../images/slide2.jpg';
 
 const AverageScore = () => {
-    const [isLoggedIn, setIsLoggedIn, user, setUser, roleRef, tokenRef, gamesList, setGamesList, winsRate, setWinsRate, playersList, setPlayersList, avgWinsRate] = useContext(AuthContext);
+    const [,,,,,,,,,,,,, avgWinsRate] = useContext(AuthContext);
 
     return (
 

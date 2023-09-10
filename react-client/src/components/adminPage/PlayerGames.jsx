@@ -35,10 +35,10 @@ function GameRow({ game , num }) {
 
 function PlayerGames({id, player, setPlayer}) {
 
-    const [isLoggedIn, setIsLoggedIn, user, setUser, roleRef, tokenRef, gamesList, setGamesList, 
-        winsRate, setWinsRate, playersList, setPlayersList, avgWinsRate, setAvgWinsRate,
-        ranking, setRanking,refresh] = useContext(AuthContext);
+    const [api_urlRef,,,,,, tokenRef, gamesList, setGamesList, 
+        , setWinsRate, playersList,,,,,,refresh] = useContext(AuthContext);
     const config = { headers: { Authorization: `Bearer ${tokenRef.current}` } };
+    const URL = api_urlRef.current;
     const rows = [];
     const row_player = useRef('');
     let num = 0;
@@ -54,7 +54,7 @@ function PlayerGames({id, player, setPlayer}) {
     useEffect(() => {
         setGamesList(gamesList => []);
         // Load Players Games
-        axios.get(`http://localhost:8000/api/v1/players/${id}/games`,config).then(res => {
+        axios.get(`${URL}/players/${id}/games`,config).then(res => {
             row_player.current = res.data.Target_User;
             setGamesList(gamesList => res.data.Target_User.games? res.data.Target_User.games: ['nf']);
             setWinsRate(winsRate => res.data.WinsRate);
