@@ -33,13 +33,7 @@ class GameController extends BaseController
         $dice_2 = random_int(1,6);
         
         // obtain result (wins = 1, loses = 0)
-        $sum = $dice_1 + $dice_2;
-
-        if ($sum == 7){
-            $result = 1;    // wins
-        } else {
-            $result = 0;    // loses
-        }
+        $result = $dice_1 + $dice_2 === 7? 1: 0;
 
         $new_game = Game::create(['user_id' => $id,
                         'dice_1' => $dice_1,
