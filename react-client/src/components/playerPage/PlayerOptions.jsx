@@ -39,7 +39,15 @@ export default function PlayerOptions () {
                         // confirm player's name change
                           toast.update(id, {render:"User name edited successfully!", type:"success", isLoading: false, autoClose: 2000 });
                     }, (err) => {
-                        toast.update(id, {render: "User name could not be edited!", type:"error", isLoading: false, autoClose: 3000 });
+                        if (err.response.data.error) {
+                            const msg = err.response.data.error;
+                            // Get the first key in the object
+                            const firstKey = Object.keys(msg)[0];
+                            toast.update(id, {render: "Oops! " + msg[firstKey], type:"error", isLoading: false, autoClose: 3000 });
+                        } else if (err.response.data.message) {
+                            const msg = err.response.data.message;
+                            toast.update(id, {render: "Oops! " + msg, type:"error", isLoading: false, autoClose: 3000 });
+                        }
                     });
                     
                 }
@@ -69,7 +77,15 @@ export default function PlayerOptions () {
                         // confirm game list deletion
                         toast.update(id, {render:"Player games deleted successfully!", type:"success", isLoading: false, autoClose: 2000 });
                     }, (err) => {
-                        toast.update(id, {render: "Player games could not be deleted!", type:"error", isLoading: false, autoClose: 3000 });
+                        if (err.response.data.error) {
+                            const msg = err.response.data.error;
+                            // Get the first key in the object
+                            const firstKey = Object.keys(msg)[0];
+                            toast.update(id, {render: "Oops! " + msg[firstKey], type:"error", isLoading: false, autoClose: 3000 });
+                        } else if (err.response.data.message) {
+                            const msg = err.response.data.message;
+                            toast.update(id, {render: "Oops! " + msg, type:"error", isLoading: false, autoClose: 3000 });
+                        }
                     });
                 }
                 setActive("Game");

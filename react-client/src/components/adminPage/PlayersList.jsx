@@ -51,7 +51,8 @@ function PlayerRow({ item, onOption, player, setPlayer, active, setActive}) {
                         setRefresh(!refresh);
                         toast.update(id, {render:"Player's name edited successfully!", type:"success", isLoading: false, autoClose: 2000 });
                     }, (err) => {
-                        toast.update(id, {render: "Player's name could not be edited!", type:"error", isLoading: false, autoClose: 3000 });
+                        const msg = err.response.data.message;
+                        toast.update(id, {render: "Player's name could not be edited - " + msg, type:"error", isLoading: false, autoClose: 3000 });
                     });
                 }
             });         
@@ -75,7 +76,8 @@ function PlayerRow({ item, onOption, player, setPlayer, active, setActive}) {
                     setRefresh(!refresh);
                     toast.update(id, {render:`${item.name}'s games deleted successfully!`, type:"success", isLoading: false, autoClose: 2000 });
                 }, (err) => {
-                    toast.update(id, {render: `${item.name}'s games could not be deleted!`, type:"error", isLoading: false, autoClose: 3000 });
+                    const msg = err.response.data.message;
+                    toast.update(id, {render: `${item.name}'s games could not be deleted - ${msg}`, type:"error", isLoading: false, autoClose: 3000 });
                 });
             }
           })
@@ -163,7 +165,8 @@ function PlayersList({onOption, player, setPlayer, active, setActive}) {
             setPlayersList(playersList => res.data.players && res.data.players.length>0? res.data.players: ['nf']);
             setAvgWinsRate(avgWinsRate => res.data.avg_winsRate);
         }, (err) => {
-            toast.error("Players list could not be loaded!", {theme:"coloured", autoClose: 3000 });        });
+            const msg = err.response.data.message;
+            toast.error(`Players list could not be loaded - ${msg}`, {theme:"coloured", autoClose: 3000 });        });
     }, [refresh]);
 
     return (
