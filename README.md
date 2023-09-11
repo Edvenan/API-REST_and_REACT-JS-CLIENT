@@ -36,5 +36,7 @@ Dice game SPA client developed using REACT JS libraries to interact with above A
   Any other route will be redirected to either of the above paths, depending if the user is logged in and his role.
 
 - This client app allows for all the functionality explicitly detailed in the requirements list. Those missing details have been interpreted by the developer.
+
+- User input data validation is carried out by the API, not by the client, so as to test the API implementation.
   
 - Continuous Deployment implemented between Hosting provider (`Netlify.com`) and GitHub: everytime a new code version of the client is pushed to GitHub, a GitHub Action will be triggered to deploy the API automatically.
