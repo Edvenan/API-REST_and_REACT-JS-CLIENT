@@ -37,7 +37,8 @@ function Loser({onOption, setPlayer}) {
         axios.get(`${URL}/players/ranking/loser`,config).then(res => {
             setLoser(loser => res.data.loser && (res.data.loser).length>0? res.data.loser: ['nf']);
         }, (err) => {
-            toast.error("Ranking could not be loaded!", {theme:"coloured", autoClose: 3000 });
+            const msg = err.response.data.message;
+            toast.error(`Loser could not be loaded - ${msg}`, {theme:"coloured", autoClose: 3000 });
         });
     }, [refresh]);
 

@@ -59,7 +59,8 @@ function PlayerGames({id, player, setPlayer}) {
             setGamesList(gamesList => res.data.Target_User.games? res.data.Target_User.games: ['nf']);
             setWinsRate(winsRate => res.data.WinsRate);
         }, (err) => {
-            toast.error("Player games could not be loaded!", {theme:"coloured", autoClose: 3000 });
+            const msg = err.response.data.message;
+            toast.error(`Player games could not be loaded - ${msg}`, {theme:"coloured", autoClose: 3000 });
         });
     }, [refresh, id]);
 
