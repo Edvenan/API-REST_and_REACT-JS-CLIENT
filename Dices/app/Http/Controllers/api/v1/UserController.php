@@ -114,12 +114,9 @@ class UserController extends BaseController
      */
     public function logout()
     {
-        // delete first entry in Roles table
-        //Role::where('user_id', Auth::user()->id)->delete();
         // delete entry (Token) in Oauth Access Tokens table
         Auth::user()->tokens()->delete();
-        
-
+    
         return $this->sendResponse('User logged out successfully.', ['user' => Auth::user()], 201);
 
     }
