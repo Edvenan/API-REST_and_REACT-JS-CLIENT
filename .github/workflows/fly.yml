@@ -7,7 +7,7 @@ on:
       - 'Dices/**'
   pull_request:
     branches:
-      - main
+      - develop
     paths:
       - 'Dices/**'
 jobs:
@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: superfly/flyctl-actions/setup-flyctl@develop
+      - uses: superfly/flyctl-actions/setup-flyctl@main
       - run: flyctl deploy --remote-only
         working-directory: ./Dices
         env:
