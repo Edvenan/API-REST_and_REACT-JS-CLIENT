@@ -13,6 +13,7 @@ const Header = () => {
     const [api_urlRef,isLoggedIn, setIsLoggedIn,, setUser, roleRef, tokenRef,, setGamesList,, setWinsRate] = useContext(AuthContext);
     const emailRef = useRef();
     const passwordRef = useRef();
+    const cpasswordRef = useRef();
     const nameRef = useRef();
     const config = { headers: { Authorization: `Bearer ${tokenRef.current}` } };
     const URL = api_urlRef.current;
@@ -64,8 +65,15 @@ const Header = () => {
             toast.update(id, {render:"Login successful!", type:"success", isLoading: false, autoClose: 500 });
 
         }, (err) => {
-            const msg = err.response.data.message;
-            toast.update(id, {render: "Oops! " + msg?msg:"Something went wrong...", type:"error", isLoading: false, autoClose: 3000 });
+            if (err.response.data.error) {
+                const msg = err.response.data.error;
+                // Get the first key in the object
+                const firstKey = Object.keys(msg)[0];
+                toast.update(id, {render: "Oops! " + msg[firstKey], type:"error", isLoading: false, autoClose: 3000 });
+            } else if (err.response.data.message) {
+                const msg = err.response.data.message;
+                toast.update(id, {render: "Oops! " + msg, type:"error", isLoading: false, autoClose: 3000 });
+            }
             login_form(email);
           });
     }
@@ -87,11 +95,11 @@ const Header = () => {
               const email = Swal.getPopup().querySelector('#email').value
               const password = Swal.getPopup().querySelector('#password').value
               const c_password = Swal.getPopup().querySelector('#c_password').value
-              if (!email || !password || !c_password) {
+              /* if (!email || !password || !c_password) {
                 Swal.showValidationMessage(`Please enter email and password`)
               } else if (password !== c_password) {
                 Swal.showValidationMessage(`Confirmed password does not match password`)
-              }
+              } */
               return { name: name, email: email, password: password, c_password: c_password}
             }
           }).then((result) => {
@@ -99,6 +107,7 @@ const Header = () => {
             nameRef.current = result.value.name;
             emailRef.current = result.value.email;
             passwordRef.current = result.value.password;
+            cpasswordRef.current = result.value.c_password;
             register();
           })
           
@@ -108,7 +117,7 @@ const Header = () => {
         let name = nameRef.current;
         let email = emailRef.current;
         let password = passwordRef.current;
-        let c_password = passwordRef.current;
+        let c_password = cpasswordRef.current;
         const id = toast.loading("Registration in progress...")
 
         axios.post(`${URL}/players`, {name, email, password, c_password}).then(res => {
@@ -116,12 +125,16 @@ const Header = () => {
             toast.update(id, {render:"Registration successful!. Please login.", type:"success", isLoading: false, autoClose: 2000});
             login_form();
         }, (err) => {
-
-            const msg = err.response.data.error;
-
-            // Get the first key in the object
-            const firstKey = Object.keys(msg)[0];
-            toast.update(id, {render: "Oops! " + msg[firstKey], type:"error", isLoading: false, autoClose: 3000 });
+            if (err.response.data.error) {
+                const msg = err.response.data.error;
+                // Get the first key in the object
+                const firstKey = Object.keys(msg)[0];
+                toast.update(id, {render: "Oops! " + msg[firstKey], type:"error", isLoading: false, autoClose: 3000 });
+            } else if (err.response.data.message) {
+                const msg = err.response.data.message;
+                toast.update(id, {render: "Oops! " + msg, type:"error", isLoading: false, autoClose: 3000 });
+            }
+            
             register_form(name, email);
         });
     }
@@ -139,12 +152,21 @@ const Header = () => {
             setWinsRate(0);
             navigate("/");
         }, (err) => {
-            setIsLoggedIn(false);
+           /*  setIsLoggedIn(false);
             setUser(null);
             setGamesList([]);
             setWinsRate(0);
-            navigate("/");
-            toast.update(id, {render: "Oops! Invalid Token! Logging out anyway...", type:"error", isLoading: false, autoClose: 3000 });
+            navigate("/"); */
+            
+            if (err.response.data.error) {
+                const msg = err.response.data.error;
+                // Get the first key in the object
+                const firstKey = Object.keys(msg)[0];
+                toast.update(id, {render: "Oops! " + msg[firstKey], type:"error", isLoading: false, autoClose: 3000 });
+            } else if (err.response.data.message) {
+                const msg = err.response.data.message;
+                toast.update(id, {render: "Oops! " + msg, type:"error", isLoading: false, autoClose: 3000 });
+            }            
         });
         sessionStorage.clear();
     }
