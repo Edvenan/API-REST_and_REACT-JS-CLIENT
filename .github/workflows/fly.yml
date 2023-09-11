@@ -3,6 +3,13 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'Dices/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'Dices/**'
 jobs:
   deploy:
     name: Deploy Rolling Dices API
