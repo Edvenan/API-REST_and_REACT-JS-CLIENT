@@ -139,7 +139,6 @@ const Header = () => {
         });
     }
 
-    
     function logout(){
 
         const id = toast.loading("Loging out...")
@@ -174,40 +173,29 @@ const Header = () => {
     return (
         <header className="flex justify-between py-4 font-bold bg-black border-4 border-yellow-300  text-white items-center">
  
-                {isLoggedIn?
-                    <>
-                        <div className="ml-4">
-                                <img className="text-xs " src={logo} height="60px" width="60px" alt="logo"/>
-                            <ToastContainer style={{ width: "auto" }}/>
-                        </div>
-                        <div className=" mt-2 text-yellow-300 font-Henny-Penny  text-3xl sm:text-5xl">
-                            Rolling Dices!
-                        </div>
-                        <div className="mr-4 text-xs sm:text-sm cursor-pointer text-yellow-300 hover:text-[darkgoldenrod]"
-                            onClick={logout}>Logout
-                        </div>
-                    </>
-                    :
-                    <>
-                        <div className="ml-4">
-                            <Link to="/">
-                                <img className="text-xs cursor-pointer transition-transform transform hover:rotate-180" src={logo} height="60px" width="60px" alt="logo"/>
-                            </Link>
-                            <ToastContainer style={{ width: "auto" }}/>
-                        </div>
-                        <div className=" mt-2 text-yellow-300 font-Henny-Penny  text-3xl sm:text-5xl">
-                            Rolling Dices!
-                        </div>
-                        <div className="flex ">
-                            <div className="mr-4 text-xs cursor-pointer sm:text-sm text-yellow-300 hover:text-[darkgoldenrod]"
-                                onClick={() => login_form()}>Login
-                            </div>
-                            <div className="mr-4 text-xs cursor-pointer sm:text-sm text-yellow-300 hover:text-[darkgoldenrod]"
-                            onClick={() => register_form()}>Register
-                            </div>
-                        </div>
-                    </>
-                }      
+            <div className="ml-4">
+                <Link to="/">
+                    <img className="text-xs cursor-pointer transition-transform transform hover:rotate-180" src={logo} height="60px" width="60px" alt="logo"/>
+                </Link>
+                <ToastContainer style={{ width: "auto" }}/>
+            </div>
+            <div className=" mt-2 text-yellow-300 font-Henny-Penny  text-3xl sm:text-5xl">
+                Rolling Dices!
+            </div>
+            {isLoggedIn?
+                <div className="mr-4 text-xs sm:text-sm cursor-pointer text-yellow-300 hover:text-[darkgoldenrod]"
+                    onClick={logout}>Logout
+                </div>
+                :
+                <div className="flex ">
+                    <div className="mr-4 text-xs cursor-pointer sm:text-sm text-yellow-300 hover:text-[darkgoldenrod]"
+                        onClick={() => login_form()}>Login
+                    </div>
+                    <div className="mr-4 text-xs cursor-pointer sm:text-sm text-yellow-300 hover:text-[darkgoldenrod]"
+                    onClick={() => register_form()}>Register
+                    </div>
+                </div>
+            }      
         </header>
     )
 }
