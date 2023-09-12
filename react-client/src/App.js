@@ -1,5 +1,4 @@
-
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import NotFound from './components/NotFound';
@@ -11,12 +10,13 @@ import AuthContext from './services/AuthContext';
 
 export default function App() {
 
-    const navigate = useNavigate();
     const [,, setIsLoggedIn,, setUser, roleRef, tokenRef] = useContext(AuthContext);
 
-    useEffect(()=> {
-        // Recover user data after page reload to keep session alive
-        const loggedInUser = sessionStorage.getItem("user");
+    // Recover user data after page reload to keep session alive
+    const loggedInUser = sessionStorage.getItem("user");
+    
+    useEffect(()=>{
+        // If there is an active user, recover user variables
         if (loggedInUser) {
             const foundUser = JSON.parse(loggedInUser);
             setUser(foundUser);
@@ -25,33 +25,24 @@ export default function App() {
             const foundRole = sessionStorage.getItem("role");
             roleRef.current = JSON.parse(foundRole);
             setIsLoggedIn(true);
-            if (roleRef.current === 'player'){
-                navigate("/player");
-            }else if (roleRef.current === 'admin'){
-                navigate("/admin");
-            }
         }
-        else {
-            navigate("/");
-        }
-    }, []);
-
+    },[]);
+    
     return (
         <div className="min-h-screen flex flex-col bg-black">
             <Header />
             <div className='flex flex-grow'>
                 <div className="flex flex-col w-full">
                     <Routes>
-                        <Route exact path="/"  element={<HomePage />} />
-                        <Route exact path="/home"  element={<HomePage />} />
-                        <Route exact path="/player"  element={<PlayerPage />} />
-                        <Route exact path="/admin"  element={<AdminPage />} />
-                        <Route exact path="*"  element={<NotFound />} />
+                        <Route  path="/"  element={<HomePage />} />
+                        <Route  path="/home"  element={<HomePage />} />
+                        <Route  path="/player"  element={<PlayerPage />} />
+                        <Route  path="/admin"  element={<AdminPage />} />
+                        <Route  path="*"  element={<NotFound />} />
                     </Routes>
                 </div>
             </div>
             <Footer />
         </div>
-
     );
   }
