@@ -123,7 +123,7 @@ const Header = () => {
         axios.post(`${URL}/players`, {name, email, password, c_password}).then(res => {
 
             toast.update(id, {render:"Registration successful!. Please login.", type:"success", isLoading: false, autoClose: 2000});
-            login_form();
+            login_form(email);
         }, (err) => {
             if (err.response.data.error) {
                 const msg = err.response.data.error;
