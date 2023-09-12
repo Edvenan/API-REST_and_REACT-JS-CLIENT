@@ -20,5 +20,18 @@ jobs:
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - run: flyctl deploy --remote-only
         working-directory: ./Dices
-        env:
-          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+#      - name: Install Passport Keys
+#        run: php /var/www/html/artisan passport:install --remote-only
+
+env:
+  FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+  DB_USERNAME: ${{ secrets.DB_USERNAME }}
+  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+  DB_CONNECTION: "mysql"
+  DB_DATABASE: "dices"
+  DB_HOST:  "dices-mysql.internal"
+  LOG_CHANNEL: "stderr"
+  LOG_LEVEL: "info"
+  LOG_STDERR_FORMATTER: "Monolog\\Formatter\\JsonFormatter"
+  SESSION_DRIVER: "cookie"
+  SESSION_SECURE_COOKIE: "true"
