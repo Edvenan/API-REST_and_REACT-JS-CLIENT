@@ -31,10 +31,8 @@ console_command = "php /var/www/html/artisan tinker"
   force_https = true
   auto_stop_machines = true
   auto_start_machines = true
-  min_machines_running = 0
+  min_machines_running = 1
   processes = ["app"]
 
 [deploy]
-  passport_command = "php /var/www/html/artisan passport:install"
   release_command = "php /var/www/html/artisan migrate --force"
-  seeder_command = "php /var/www/html/artisan db:seed"
