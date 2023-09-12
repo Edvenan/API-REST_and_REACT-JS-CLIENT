@@ -1,15 +1,10 @@
 name: Fly Deploy
-on:
-  push:
-    branches:
-      - develop
-    paths:
-      - 'Dices/**'
-  pull_request:
-    branches:
-      - develop
-    paths:
-      - 'Dices/**'
+on: [push, pull_request]
+branches:
+  - develop
+paths:
+  - 'Dices/**'
+
 jobs:
   deploy:
     name: Deploy Rolling Dices API
