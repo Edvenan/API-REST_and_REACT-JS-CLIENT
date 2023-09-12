@@ -29,9 +29,9 @@ const Header = () => {
             preConfirm: () => {
               const input_email = Swal.getPopup().querySelector('#email').value
               const input_password = Swal.getPopup().querySelector('#password').value
-              if (!input_email || !input_password ) {
+              /* if (!input_email || !input_password ) {
                 Swal.showValidationMessage(`Please enter email and password`)
-              }
+              } */
               return { email: input_email, password: input_password}
             }
           }).then((result) => {
