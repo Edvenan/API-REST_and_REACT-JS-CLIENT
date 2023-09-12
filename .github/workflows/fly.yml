@@ -5,7 +5,11 @@ on:
       - develop
     paths:
     - 'Dices/**'
-
+  pull_request:
+    branches:
+      - develop
+    paths:
+    - 'Dices/**'
 jobs:
   deploy:
     name: Deploy Rolling Dices API
