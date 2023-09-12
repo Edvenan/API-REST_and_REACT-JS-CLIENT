@@ -5,18 +5,19 @@ on:
       - develop
     paths:
     - 'Dices/**'
-
+  pull_request:
+    branches:
+      - develop
+    paths:
+    - 'Dices/**'
 jobs:
   deploy:
     name: Deploy Rolling Dices API
     runs-on: ubuntu-latest
+    environment: production
     steps:
       - uses: actions/checkout@v3
-        with:
-          working-directory: ./Dices
       - uses: superfly/flyctl-actions/setup-flyctl@master
-        with:
-          working-directory: ./Dices
       - run: flyctl deploy --remote-only
         working-directory: ./Dices
         env:
