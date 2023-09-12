@@ -16,8 +16,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-        with:
-          working-directory: ./Dices
       - uses: superfly/flyctl-actions/setup-flyctl@master
         with:
           working-directory: ./Dices
