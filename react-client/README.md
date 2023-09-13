@@ -21,3 +21,8 @@ The client app allows for all the functionality explicitly detailed in the requi
 - **Sound effects** added to the game when user plays a game.
 
 - **Continuous Deployment** implemented between Hosting provider (`Netlify.com`) and GitHub: everytime a new code version of the client is pushed to GitHub, a GitHub Action will be triggered to deploy the API automatically.
+
+## Captions
+![Client's Home Page](https://github.com/Edvenan/API-REST/assets/97369106/cc9124d8-607a-4d61-8571-8114815aaf2b)
+![Client's Player Page](https://github.com/Edvenan/API-REST/assets/97369106/9eab754d-fcf9-486b-8fbe-7d48f2d4e8be)
+![Client's Admin Page](https://github.com/Edvenan/API-REST/assets/97369106/668a393d-a845-454f-a2bf-528dffdd96e4)
