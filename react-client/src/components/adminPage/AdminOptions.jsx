@@ -38,7 +38,8 @@ const AdminOptions = ({onOption, active, setActive}) => {
                         // confirm player's name change
                           toast.update(id, {render:"User name edited successfully!", type:"success", isLoading: false, autoClose: 2000 });
                     }, (err) => {
-                        toast.update(id, {render: "User name could not be edited!", type:"error", isLoading: false, autoClose: 3000 });
+                        const msg = err.response.data.message;
+                        toast.error(`User name could not be edited - ${msg}`, {theme:"coloured", autoClose: 3000 });
                     });
                     
                 }

@@ -22,7 +22,7 @@ Route::controller(UserController::class)->group(function () {
 });
 
 // Routes only accessible by authorized users with assigned roles
-Route::middleware('auth:api', 'role')->group( function () {
+Route::middleware(['auth:api', 'role'])->group( function () {
     
     
     Route::middleware(['scope:admin,player'])->group( function () {

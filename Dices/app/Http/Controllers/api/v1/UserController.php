@@ -114,12 +114,9 @@ class UserController extends BaseController
      */
     public function logout()
     {
-        // delete first entry in Roles table
-        //Role::where('user_id', Auth::user()->id)->delete();
         // delete entry (Token) in Oauth Access Tokens table
         Auth::user()->tokens()->delete();
-        
-
+    
         return $this->sendResponse('User logged out successfully.', ['user' => Auth::user()], 201);
 
     }
@@ -130,7 +127,7 @@ class UserController extends BaseController
     public function edit($id, Request $request)
     {
         // Validate if Auth user can act on the target id data
-        if ( ! $this->userValidation($id, $request) ){
+        if ( ! $this->userValidation($id) ){
             return $this->sendError("Forbidden. Not authorized to modify another user's name.", ['Auth_User_Id' => Auth::user()->id, 'Target_User_Id' => $id], 403); 
         }
 
@@ -179,7 +176,7 @@ class UserController extends BaseController
     {
         
         // Validate if Auth user can act on the target id data
-        if ( ! $this->userValidation($id, $request) ){
+        if ( ! $this->userValidation($id) ){
             return $this->sendError("Forbidden. Not authorized to list another user's games.", ['Auth_User_Id' => Auth::user()->id, 'Target_User_Id' => $id], 403); 
         }
 

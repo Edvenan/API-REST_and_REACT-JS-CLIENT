@@ -1,5 +1,6 @@
 # ROLLING DICES!
 ## Introduction
+
 Dice game app consisting of rolling two dices in each round. If the sum of both dices equals 7, the player wins the round. He loses otherwise.
 
 ![Client Home Page](https://github.com/Edvenan/API-REST/assets/97369106/93300b7c-69bc-4110-898a-45b2ab6404ea)
@@ -19,6 +20,7 @@ A Player has the following options:
 ![Client Player Page](https://github.com/Edvenan/API-REST/assets/97369106/e9b1c4cb-d28c-47dc-8b7a-fe799bc35ec9)
 
 An Admin has the following options:
+
   - See all players average score (average rate of winds in %)
   - See the ranking
   - See the winner(s)
@@ -32,6 +34,7 @@ An Admin has the following options:
   - Refresh the data being shown on screen
     
 <img src="[https://your-image-url.type](https://github.com/Edvenan/API-REST/assets/97369106/eaf0937f-8902-453f-b76b-578efa174560)" height="50%">
+
 
 # Laravel API-REST
 ## Description
@@ -73,6 +76,7 @@ The game consists of rolling two dices in each round. If the sum of both dices e
 
 # REACT JS Client
 ## Description
+
 Dice game SPA client developed using REACT JS libraries to interact with above API REST.[**(Open Production Client)**](https://rolling-dices-cleint.netlify.app)
 
 The client app allows for all the functionality explicitly detailed in the requirements list. Those missing details have been interpreted by the developer.

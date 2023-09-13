@@ -1,22 +1,37 @@
 name: Fly Deploy
-on:
+on: 
   push:
     branches:
-      - main
+      - develop
     paths:
-      - 'Dices/**'
+    - 'Dices/**'
   pull_request:
     branches:
-      - main
+      - develop
     paths:
-      - 'Dices/**'
+    - 'Dices/**'
 jobs:
   deploy:
     name: Deploy Rolling Dices API
     runs-on: ubuntu-latest
+    environment: production
     steps:
       - uses: actions/checkout@v3
-      - uses: superfly/flyctl-actions/setup-flyctl@main
+      - uses: superfly/flyctl-actions/setup-flyctl@master
       - run: flyctl deploy --remote-only
-        env:
-          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+        working-directory: ./Dices
+#      - name: Install Passport Keys
+#        run: php /var/www/html/artisan passport:install --remote-only
+
+env:
+  FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+  DB_USERNAME: ${{ secrets.DB_USERNAME }}
+  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+  DB_CONNECTION: "mysql"
+  DB_DATABASE: "dices"
+  DB_HOST:  "dices-mysql.internal"
+  LOG_CHANNEL: "stderr"
+  LOG_LEVEL: "info"
+  LOG_STDERR_FORMATTER: "Monolog\\Formatter\\JsonFormatter"
+  SESSION_DRIVER: "cookie"
+  SESSION_SECURE_COOKIE: "true"

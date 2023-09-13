@@ -93,7 +93,16 @@ const RollDice = ({ sides }) => {
 				}
 				setRefresh(!refresh);
 			}, (err) => {
-				toast.error("Could not roll!", {theme:"coloured", autoClose: 3000 });
+				if (err.response.data.error) {
+					const msg = err.response.data.error;
+					// Get the first key in the object
+					const firstKey = Object.keys(msg)[0];
+					toast.error(`Oops! ${msg[firstKey]}`,  {theme:"coloured", autoClose: 3000 });
+				} else if (err.response.data.message) {
+					const msg = err.response.data.message;
+					toast.error(`Oops! ${msg}`, {theme:"coloured", autoClose: 3000 });
+				}
+				setRolling(rolling => false);
 			});
 		},1500);
 	

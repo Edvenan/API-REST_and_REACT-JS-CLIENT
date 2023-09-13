@@ -37,7 +37,8 @@ function Winner() {
         axios.get(`${URL}/players/ranking/winner`,config).then(res => {
             setWinner(winner => res.data.winner && (res.data.winner).length>0? res.data.winner: ['nf']);
         }, (err) => {
-            toast.error("Ranking could not be loaded!", {theme:"coloured", autoClose: 3000 });
+            const msg = err.response.data.message;
+            toast.error(`Winner could not be loaded - ${msg}`, {theme:"coloured", autoClose: 3000 });
         });
     }, [refresh]);
 
