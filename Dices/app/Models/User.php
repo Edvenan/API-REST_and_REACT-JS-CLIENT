@@ -2,15 +2,17 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Laravel\Passport\HasApiTokens;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+//use Laravel\Sanctum\HasApiTokens;
+
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -42,4 +44,33 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    /**
+     * add the One-To-One relationship between User and Role Model.
+     */
+    public function role()
+    {
+        return $this->hasOne(Role::class);
+    }
+
+    /**
+     * Method to list all the player's games
+     * add the One-To-Many relationship between User and Game Model.
+     */
+    // 
+    public function games()
+    {
+        return $this->hasMany(Game::class);
+    }
+
+    /**
+     * Method to get the player's wins rate
+     */
+    // 
+    public function winsRate(){
+        if ($this->games()->count()) {
+        return floatval($this->games->where('result', 1)->count() / $this->games->count());
+        }
+        return 0;
+    }
 }

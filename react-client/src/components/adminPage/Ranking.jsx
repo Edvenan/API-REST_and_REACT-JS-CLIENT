@@ -1,0 +1,78 @@
+import axios from 'axios';
+import { useContext, useEffect } from 'react';
+import AuthContext from '../../services/AuthContext';
+import { toast } from 'react-toastify';
+import foto from './../../images/green-background.jpg';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+
+function PlayerRow({ player, rank }) {
+
+    const name = player.name;
+    const winsRate = (player.winsRate*100).toFixed(2);
+
+    return (
+        <tr className="text-center text-white text-[8px] sm:text-xs border-b-2 border-gray-200 bg-black bg-opacity-30">
+            <td className="text-center">{rank}</td>
+            <td className="text-left pl-4">{name}</td>
+            <td className="text-right">{winsRate}% &emsp;&emsp;</td>
+        </tr>
+    );
+}
+
+function Ranking({onOption, setPlayer}) {
+    const [api_urlRef,,,,,, tokenRef,,,,,,,,,ranking, setRanking,refresh ] = useContext(AuthContext);
+    const config = { headers: { Authorization: `Bearer ${tokenRef.current}` } };
+    const URL = api_urlRef.current;
+    const rows = [];
+
+    ranking.forEach((player) => {
+
+        rows.push( <PlayerRow key={player.id} player={player} rank={player.rank} /> );
+    });
+  
+
+    useEffect(() => {
+        setRanking(ranking => []);
+        // Load Ranking
+        axios.get(`${URL}/players/ranking`,config).then(res => {
+            // list player's games
+            setRanking(ranking => res.data.ranking && res.data.ranking.length>0? res.data.ranking: ['nf']);
+        }, (err) => {
+            const msg = err.response.data.message;
+            toast.error(`Ranking could not be loaded - ${msg}`, {theme:"coloured", autoClose: 3000 });
+        });
+    }, [refresh]);
+
+    return (
+        <>
+        <div className='flex flex-grow  bg-black p-1 px-2 text-xs border-4 border-yellow-300 
+                            my-0.5 ml-0.5  overflow-y-auto justify-center bg-no-repeat bg-cover bg-top' style={{  'backgroundImage': `url(${foto})` }}> 
+            <div className="flex flex-col" >
+                
+                    
+                <h1 className=" my-2 font-bold text-xs sm:text-xl text-center text-yellow-300 ">RANKING</h1>
+                
+                <table className='' >
+                    <thead >
+                    <tr >
+                        <th className= "py-1 px-4 border-b-4 border-gray-200 bg-gray-500 text-left text-[8px] sm:text-[10px] font-semibold text-gray-100 uppercase tracking-wider">
+                            Rank</th>
+                        <th className= "py-1  px-4  border-b-4 border-gray-200 bg-gray-500 text-left text-[8px] sm:text-[10px] font-semibold text-gray-100 uppercase tracking-wider">
+                            Name</th>
+                        <th className= "py-1  px-4 border-b-4 border-gray-200 bg-gray-500 text-center text-[8px] sm:text-[10px] font-semibold text-gray-100 uppercase tracking-wider">
+                            Wins Rate</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>{ranking[0] === 'nf' || ranking.length === 0? <></>: rows}
+                    </tbody>
+                </table>
+                {ranking[0] === 'nf'? <h1 className="text-white text-center">No Players Found</h1> : <></>}
+                {ranking.length === 0? <div className='text-white text-center text-2xl'><FontAwesomeIcon icon="fa-solid fa-spinner" spin /></div>  : <></>}
+            </div>
+        </div>
+        </>
+    );
+  }
+
+export default Ranking;
