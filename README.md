@@ -1,9 +1,11 @@
 # ROLLING DICES!
 ## Introduction
 
-Dice game app consisting of rolling two dices in each round. If the sum of both dices equals 7, the player wins the round. He loses otherwise.
+Dice game app in which the player rolls two dices in each round. If the sum of both dices is 7, the player wins the round. He loses otherwise.
+The winner is the player with the highest rate of wins.
+Development of the game is divided into a backend API and a frontend client, both deployed and hosted in separate hosting providers.
 
-![Client Home Page](https://github.com/Edvenan/API-REST/assets/97369106/93300b7c-69bc-4110-898a-45b2ab6404ea)
+<img src="https://github.com/Edvenan/API-REST/assets/97369106/93300b7c-69bc-4110-898a-45b2ab6404ea" alt="Rolling Dices home page" width="50%">
 
 Two roles have been defined for this app:
 - Player (they can be created via registration/sign-up process)
@@ -17,7 +19,7 @@ A Player has the following options:
   - Delete all his games at once (not a particular one)
   - Edit his user name
     
-![Client Player Page](https://github.com/Edvenan/API-REST/assets/97369106/e9b1c4cb-d28c-47dc-8b7a-fe799bc35ec9)
+<img src="https://github.com/Edvenan/API-REST/assets/97369106/e9b1c4cb-d28c-47dc-8b7a-fe799bc35ec9" alt="Rolling Dices Player page" width="50%">
 
 An Admin has the following options:
 
@@ -33,10 +35,10 @@ An Admin has the following options:
   - Delete a player (and his games)
   - Refresh the data being shown on screen
     
-<img src="[https://your-image-url.type](https://github.com/Edvenan/API-REST/assets/97369106/eaf0937f-8902-453f-b76b-578efa174560)" height="50%">
+<img src="https://github.com/Edvenan/API-REST/assets/97369106/eaf0937f-8902-453f-b76b-578efa174560" alt="Rolling Dices Admin page" width="50%">
 
 
-# Laravel API-REST
+# Laravel PHP API-REST
 ## Description
 Dice Game application API REST developed using **Laravel** framework to serve any frontend.[**(Open Production API)**](https://rolling-dices-api.fly.dev)
 The game consists of rolling two dices in each round. If the sum of both dices equals 7, the player wins the round. He loses otherwise.
