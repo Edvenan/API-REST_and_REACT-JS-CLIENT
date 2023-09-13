@@ -1,6 +1,6 @@
-# Laravel API-REST
+# Laravel PHP API REST
 ## Description
-Dice Game application API REST developed using **Laravel** framework to serve any frontend.[**(Open Production API)**](https://rolling-dices-api.fly.dev)
+Dice Game application API REST developed using **Laravel PHP** framework to serve any frontend.[**(Open Production API Welcome page)**](https://rolling-dices-api.fly.dev)
 The game consists of rolling two dices in each round. If the sum of both dices equals 7, the player wins the round. He loses otherwise.
 
 - **Routes** implemented:
