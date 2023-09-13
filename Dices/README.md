@@ -34,3 +34,8 @@ The game consists of rolling two dices in each round. If the sum of both dices e
     (To run them all: ```> php artisan test --testsuite=Feature --stop-on-failure```)
 
 - **Continuous Deployment** implemented between Hosting provider (`Fly.io`) and GitHub: everytime a new code version is pushed to GitHub, a GitHub Action will be triggered to deploy the API automatically.
+
+## Caption
+
+![Postman request to API](https://github.com/Edvenan/API-REST/assets/97369106/52a490ea-0a25-4456-ae09-b6b8745c7d45)
+
