@@ -36,9 +36,9 @@ An Admin has the following options:
 <img src="[https://your-image-url.type](https://github.com/Edvenan/API-REST/assets/97369106/eaf0937f-8902-453f-b76b-578efa174560)" height="50%">
 
 
-# Laravel API-REST
+# Laravel PHP API REST
 ## Description
-Dice Game application API REST developed using **Laravel** framework to serve any frontend.[**(Open Production API)**](https://rolling-dices-api.fly.dev)
+Dice Game application API REST developed using **Laravel PHP** framework to serve any frontend.[**(Open Production API Welcome page)**](https://rolling-dices-api.fly.dev)
 The game consists of rolling two dices in each round. If the sum of both dices equals 7, the player wins the round. He loses otherwise.
 
 - **Routes** implemented:
@@ -51,9 +51,10 @@ The game consists of rolling two dices in each round. If the sum of both dices e
       GET /players/{id}/games: returns the list of games of a particular player
       GET /players/ranking: returns the ranking
       GET /players/ranking/loser: returns the player with lowest wins rate
-      GET /players/ranking/winner: returns the player with highest wins rate  
+      GET /players/ranking/winner: returns the player with highest wins rate
+      DELETE /players/{id}: delete a player
 
-- **CORS**: CORS issue has been avoided by adding a prefix (api/v1) to all the routes.
+- **CORS**: CORS issue has been avoided by adding a prefix (```api/v1```) to all the routes.
  
 - **MySQL** database implemented.\
     (To create the database and its tables run: ```php artisan migrate --force```)
@@ -77,7 +78,7 @@ The game consists of rolling two dices in each round. If the sum of both dices e
 # REACT JS Client
 ## Description
 
-Dice game SPA client developed using REACT JS libraries to interact with above API REST.[**(Open Production Client)**](https://rolling-dices-cleint.netlify.app)
+Dice game SPA client developed using REACT JS libraries to interact with above API REST.[**(Open Production Client)**](https://rolling-dices-client.netlify.app)
 
 The client app allows for all the functionality explicitly detailed in the requirements list. Those missing details have been interpreted by the developer.
 

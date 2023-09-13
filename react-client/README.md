@@ -1,6 +1,6 @@
 # REACT JS Client
 ## Description
-Dice game SPA client developed using REACT JS libraries to interact with above API REST.[**(Open Production Client)**](https://rolling-dices-cleint.netlify.app)
+Dice game SPA client developed using REACT JS libraries to interact with above API REST.[**(Open Production Client)**](https://rolling-dices-client.netlify.app)
 
 The client app allows for all the functionality explicitly detailed in the requirements list. Those missing details have been interpreted by the developer.
 
