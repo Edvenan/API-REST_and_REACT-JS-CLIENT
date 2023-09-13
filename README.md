@@ -8,8 +8,8 @@ Development of the game is divided into a backend API and a frontend client, bot
 <img src="https://github.com/Edvenan/API-REST/assets/97369106/93300b7c-69bc-4110-898a-45b2ab6404ea" alt="Rolling Dices home page" width="50%">
 
 Two roles have been defined for this app:
-- Player (they can be created via registration/sign-up process)
-- Admin (pre-defined in the database)
+- **Player** (they can be created via registration/sign-up process)
+- **Admin** (pre-defined in the database)
 
 ## Game Mechanics: ##
 A Player has the following options:
