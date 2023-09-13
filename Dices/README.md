@@ -14,7 +14,8 @@ The game consists of rolling two dices in each round. If the sum of both dices e
       GET /players/ranking: returns the ranking
       GET /players/ranking/loser: returns the player with lowest wins rate
       GET /players/ranking/winner: returns the player with highest wins rate  
-
+      DELETE /players/{id}: delete a player
+  
 - **CORS**: CORS issue has been avoided by adding a prefix (api/v1) to all the routes.
  
 - **MySQL** database implemented.\
