@@ -1,11 +1,13 @@
 # ROLLING DICES!
 ## Introduction
 
-Dice game app in which the player rolls two dices in each round. If the sum of both dices is 7, the player wins the round. He loses otherwise.
-The winner is the player with the highest rate of wins.
-Development of the game is divided into a backend API and a frontend client, both deployed and hosted in separate hosting providers.
+Dice game app in which the player rolls two dices in each round. If the sum of both dices is 7, the player wins the round. He loses otherwise. 
+The winner is the player with the highest rate of wins.\
+Development of the game is divided into a backend API and a frontend client, both deployed and hosted in separate hosting providers. 
 
-<img src="https://github.com/Edvenan/API-REST/assets/97369106/93300b7c-69bc-4110-898a-45b2ab6404ea" alt="Rolling Dices home page" width="50%">
+<p align='center'>
+<img src="https://github.com/Edvenan/API-REST/assets/97369106/93300b7c-69bc-4110-898a-45b2ab6404ea" alt="Rolling Dices home page"  width="50%">
+</p>
 
 Two roles have been defined for this app:
 - **Player** (they can be created via registration/sign-up process)
@@ -18,8 +20,10 @@ A Player has the following options:
   - See his games list
   - Delete all his games at once (not a particular one)
   - Edit his user name
-    
+
+<p align='center'>
 <img src="https://github.com/Edvenan/API-REST/assets/97369106/e9b1c4cb-d28c-47dc-8b7a-fe799bc35ec9" alt="Rolling Dices Player page" width="50%">
+</p>
 
 An Admin has the following options:
 
@@ -34,9 +38,10 @@ An Admin has the following options:
   - Delete a player's games
   - Delete a player (and his games)
   - Refresh the data being shown on screen
-    
-<img src="https://github.com/Edvenan/API-REST/assets/97369106/eaf0937f-8902-453f-b76b-578efa174560" alt="Rolling Dices Admin page" width="50%">
 
+<p align='center'>
+<img src="https://github.com/Edvenan/API-REST/assets/97369106/eaf0937f-8902-453f-b76b-578efa174560" alt="Rolling Dices Admin page" width="50%">
+</p>
 
 # Laravel PHP API-REST
 ## Description
@@ -57,47 +62,7 @@ The game consists of rolling two dices in each round. If the sum of both dices e
       DELETE /players/{id}: delete a player
 
 - **CORS**: CORS issue has been avoided by adding a prefix (```api/v1```) to all the routes.
- 
-- **MySQL** database implemented.\
-    (To create the database and its tables run: ```php artisan migrate --force```)
-
-- **Authentication** process using **Laravel Passport**.\
-  (To generate Personal Access Keys: ```> php artisan passport:keys```)
-
-- **Roles**: two different user roles implemented, Player and Admin, to allow the assignment of different options (as per the 'Game Mechanics' section).
-  
-- **Seeders and Factories** implemented to create:
-  - 1 Admin user (```email:'admin@admin.com' password:'password'```)
-  - 10 Players with 10 games each (```password:'password'```)\
-    (To run them: ```> php artisan db:seed```)
-
-- **Feature test suites** for Player, Admin and Authorization (login, register and logout) actions implemented using **PHPUnit**.\
-    (To run them all: ```> php artisan test --testsuite=Feature --stop-on-failure```)
-
-- **Continuous Deployment** implemented between Hosting provider (`Fly.io`) and GitHub: everytime a new code version is pushed to GitHub, a GitHub Action will be triggered to deploy the API automatically.
-
-
-# REACT JS Client
-## Description
-
-Dice game SPA client developed using REACT JS libraries to interact with above API REST.[**(Open Production Client)**](https://rolling-dices-client.netlify.app)
-
-The client app allows for all the functionality explicitly detailed in the requirements list. Those missing details have been interpreted by the developer.
-
-- **Authentication**: Login, Registration and Logout features implemented but relying on the API for authentication.
-  
-- **Routes**: three route paths used:
-  
-      "/" : Home page
-      "/player" : Player page (once logged in)
-      "/admin" : Admin page (once logged in)
-
-  Any other route will show a **404 Not Found page** and will then redirect to either of the above paths, depending on whether the user is logged or not and his role.
-
-- Use of browser's **sessionStorage** to keep session alive during page reload.
-  
-- User input **data validation** is carried out by the API, not by the client, so as to test the API implementation.
-
-- **Sound effects** added to the game when user plays a game.
-
-- **Continuous Deployment** implemented between Hosting provider (`Netlify.com`) and GitHub: everytime a new code version of the client is pushed to GitHub, a GitHub Action will be triggered to deploy the API automatically.
+Use Control + Shift + m to toggle the tab key moving focus. Alternatively, use esc then tab to move to the next interactive element on the page.
+No file chosen
+Attach files by dragging & dropping, selecting or pasting them.
+Editing API-REST/README.md at develop · Edvenan/API-REST
